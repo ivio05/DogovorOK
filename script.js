@@ -10,6 +10,10 @@ const legalFactorsDiv = document.getElementById('legalFactors');
 const downloadReportBtn = document.getElementById('downloadReport');
 const downloadContractBtn = document.getElementById('downloadContract');
 
+let totalFilesUploaded = 0;
+let validFilesUploaded = 0;
+let invalidFilesUploaded = 0;
+
 // Сохраняем изначальное содержимое области загрузки
 const originalUploadAreaContent = uploadArea.innerHTML;
 const originalBackgroundColor = '#f0f8ff'; 
@@ -223,4 +227,25 @@ function handleFile(file) {
             console.error('Ошибка:', error);
             resultDiv.innerHTML = 'Произошла ошибка при обработке файла.';
         });
+
+    sendEvent('file_upload', {
+        fileName: file.name,
+        fileSize: file.size,
+        fileType: file.type,
+    });
+}
+
+function sendEvent(eventName, data = {}) {
+    fetch('http://localhost:3000/track', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            event: eventName,
+            data,
+            timestamp: Date.now(),
+            userAgent: navigator.userAgent,
+            page: window.location.pathname,
+            referrer: document.referrer,
+        })
+    }).catch(err => console.error('Ошибка при отправке события:', err));
 }
