@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="ru">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>ДоговорОК</title>
-        <link rel="stylesheet" href="styles.css">
-    </head>
-    
-    <body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ДоговорОК</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
     <!-- Плашка с названием сайта -->
     <div class="site-header">
         <div class="header-content">
-        <h1>ДоговорОК</h1>
-        <p>Ваш надежный помощник в работе с документами. Тут ещё логотип разместить можно</p>
+            <h1>ДоговорОК</h1>
+            <p>Ваш надежный помощник в работе с документами. Тут ещё логотип разместить можно</p>
         </div>
     </div>
 
@@ -22,8 +22,8 @@
         <div class="top-section">
             <div class="container">
                 <header>
-                <h2>Добро пожаловать на ДоговорОК!</h2>
-                <p>Описание описание описание описание описание описание описание описание описание описание описание</p>
+                    <h2>Добро пожаловать на ДоговорОК!</h2>
+                    <p>Описание описание описание описание описание описание описание описание описание описание описание</p>
                 </header>
             </div>
 
@@ -42,10 +42,60 @@
         <!-- Область загрузки файла -->
         <div class="upload-area" id="uploadArea">
             <p>Перетащите файл сюда или нажмите для выбора</p>
-            <input type="file" id="fileInput" hidden>
+            <input type="file" id="fileInput" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden>
         </div>
 
-        <div class="result-area" id="result"></div>
+        <div class="result-area" id="result">        </div>
+
+        <!-- Заголовок анализа файла -->
+        <h2 class="analysis-title" id="analysisTitle" style="display: none;"></h2>
+
+        <!-- Область результатов анализа (будет скрыта до завершения анализа) -->
+        <div class="analysis-results" id="analysisResults" style="display: none;">
+            <div class="analysis-columns">
+                <!-- Колонка с экономической экспертизой -->
+                <div class="analysis-column">
+                    <h3>Экономическая экспертиза</h3>
+                    <div class="score-container">
+                        <div class="score" id="economicScore">2</div>
+                    </div>
+                    <div class="factors-container">
+                        <div class="factors-header">
+                            <span>Фактор</span>
+                            <span>Результат</span>
+                            <span>Ссылка</span>
+                        </div>
+                        <div class="factors-list" id="economicFactors">
+                            <!-- Здесь будут добавляться факторы через JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Колонка с юридической экспертизой -->
+                <div class="analysis-column">
+                    <h3>Юридическая экспертиза</h3>
+                    <div class="score-container">
+                        <div class="score" id="legalScore">3</div>
+                    </div>
+                    <div class="factors-container">
+                        <div class="factors-header">
+                            <span>Фактор</span>
+                            <span>Результат</span>
+                            <span>Ссылка</span>
+                        </div>
+                        <div class="factors-list" id="legalFactors">
+                            <!-- Здесь будут добавляться факторы через JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Кнопки для скачивания -->
+            <div class="download-buttons">
+                <button id="downloadReport" class="download-btn">Скачать отчет</button>
+                <button id="downloadContract" class="download-btn">Скачать проанализированный договор</button>
+            </div>
+        </div>
     </div>
 
     <!-- Контейнер для дополнительного описания -->
@@ -55,5 +105,5 @@
     </div>
 
     <script src="script.js"></script>
-    </body>
+</body>
 </html>
