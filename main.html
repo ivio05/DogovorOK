@@ -45,7 +45,7 @@
             <div class="column upload-column">
                 <h2>
                     Загрузка документов
-                    <span class="info-tooltip" data-tooltip="Загрузите файл формата PDF или DOCX для анализа. Максимальный размер файла - 10 МБ. Система проанализирует документ и предоставит юридическую и экономическую оценку.">?</span>
+                    <span class="info-tooltip" data-tooltip="Загрузите файл договора формата PDF или DOCX для анализа.">?</span>
                 </h2>
 
                 <div class="document-upload-carousel">
@@ -64,7 +64,6 @@
             <div class="column calc-column">
                 <h2>
                     Экономические калькуляторы
-                    <span class="info-tooltip" data-tooltip="Набор инструментов для расчета ключевых финансовых показателей. Калькуляторы помогут оценить экономическую эффективность инвестиций, период окупаемости и финансовые потоки.">?</span>
                 </h2>
 
                 <div class="calculator-carousel">
@@ -78,7 +77,7 @@
                         <div class="calculator-block slide">
                             <h3>
                                 Срок окупаемости
-                                <span class="info-tooltip" data-tooltip="Период времени, за который доходы от инвестиций сравняются с первоначальными вложениями. Рассчитывается как отношение всех затрат (включая паушальный взнос и роялти) к ежемесячной прибыли.">?</span>
+                                <span class="info-tooltip" data-tooltip="Период времени, за который доходы от инвестиций сравняются с первоначальными вложениями.">?</span>
                             </h3>
                             <div class="calculator-form">
                                 <div class="form-row">
@@ -107,7 +106,7 @@
                         <div class="calculator-block slide">
                             <h3>
                                 Рентабельность инвестиций (ROI)
-                                <span class="info-tooltip" data-tooltip="Показатель эффективности инвестиций, выраженный в процентах. Рассчитывается по формуле: (Доход - Вложения) / Вложения × 100%. При расчете за первый год учитывается паушальный взнос.">?</span>
+                                <span class="info-tooltip" data-tooltip="Показатель эффективности инвестиций.">?</span>
                             </h3>
                             <div class="calculator-form">
                                 <div class="form-row checkbox-row">
@@ -138,7 +137,7 @@
                         <div class="calculator-block slide">
                             <h3>
                                 Денежный поток (OCF)
-                                <span class="info-tooltip" data-tooltip="Операционный денежный поток показывает реальное движение денежных средств от основной деятельности. Рассчитывается по формуле: EBIT + Амортизация - Налоги.">?</span>
+                                <span class="info-tooltip" data-tooltip="Реальное движение денежных средств от основной деятельности.">?</span>
                             </h3>
                             <div class="calculator-form">
                                 <div class="form-row">
@@ -178,9 +177,9 @@
             <div class="analysis-columns">
                 <!-- Колонка с экономической экспертизой -->
                 <div class="analysis-column">
-                    <h3>Экономическая экспертиза <span class="info-tooltip" data-tooltip="Анализ экономических аспектов документа. Исследуются условия оплаты, сроки, штрафы, экономическая целесообразность и потенциальные финансовые риски. Оценка от 1 до 3, где 3 — наилучший результат.">?</span></h3>
+                    <h3>Экономическая экспертиза</h3>
                     <div class="score-container">
-                        <div class="score score-info" id="economicScore" data-tooltip="Шкала оценки от 1 до 3: 1 — низкое качество (высокие риски), 2 — среднее качество (умеренные риски), 3 — высокое качество (низкие риски)">2</div>
+                        <div class="score score-info" id="economicScore" data-tooltip="1 — высокие риски, 2 — умеренные риски, 3 — низкие риски">2</div>
                     </div>
                     <div class="factors-container">
                         <div class="factors-header">
@@ -196,9 +195,9 @@
 
                 <!-- Колонка с юридической экспертизой -->
                 <div class="analysis-column">
-                    <h3>Юридическая экспертиза <span class="info-tooltip" data-tooltip="Проверка документа на соответствие действующему законодательству. Анализируются права и обязанности сторон, гарантии, ответственность и другие юридически значимые аспекты. Оценка от 1 до 3, где 3 — наилучший результат.">?</span></h3>
+                    <h3>Юридическая экспертиза</h3>
                     <div class="score-container">
-                        <div class="score score-info" id="legalScore" data-tooltip="Шкала оценки от 1 до 3: 1 — низкое качество (высокие риски), 2 — среднее качество (умеренные риски), 3 — высокое качество (низкие риски)">3</div>
+                        <div class="score score-info" id="legalScore" data-tooltip="1 — высокие риски, 2 — умеренные риски, 3 — низкие риски">3</div>
                     </div>
                     <div class="factors-container">
                         <div class="factors-header">
@@ -215,8 +214,8 @@
 
             <!-- Кнопки для скачивания -->
             <div class="download-buttons">
-                <button id="downloadReport" class="download-btn">Скачать отчет <span class="info-tooltip tooltip-top" data-tooltip="Скачать подробный отчет в формате PDF с результатами экономической и юридической экспертизы документа.">?</span></button>
-                <button id="downloadContract" class="download-btn">Скачать проанализированный договор <span class="info-tooltip tooltip-top" data-tooltip="Скачать исходный документ с внесенными исправлениями и комментариями от наших экспертов.">?</span></button>
+                <button id="downloadReport" class="download-btn">Скачать отчет <span class="info-tooltip tooltip-top" data-tooltip="Скачать отчет с результатами экономической и юридической экспертизы документа.">?</span></button>
+                <button id="downloadContract" class="download-btn">Скачать проанализированный договор <span class="info-tooltip tooltip-top" data-tooltip="Скачать исходный документ с выделенными строками, на основе которых был сделан вывод.">?</span></button>
             </div>
         </div>
     </div>
