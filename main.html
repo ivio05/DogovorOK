@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="ru">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>ДоговорОК</title>
-        <link rel="stylesheet" href="styles.css">
-    </head>
-    
-    <body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ДоговорОК</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
     <!-- Плашка с названием сайта -->
     <div class="site-header">
         <div class="header-content">
-        <h1>ДоговорОК</h1>
-        <p>Ваш надежный помощник в работе с документами. Тут ещё логотип разместить можно</p>
+            <h1>ДоговорОК</h1>
+            <p>Ваш надежный помощник в работе с документами. Тут ещё логотип разместить можно</p>
         </div>
     </div>
 
@@ -22,8 +22,8 @@
         <div class="top-section">
             <div class="container">
                 <header>
-                <h2>Добро пожаловать на ДоговорОК!</h2>
-                <p>Описание описание описание описание описание описание описание описание описание описание описание</p>
+                    <h2>Добро пожаловать на ДоговорОК!</h2>
+                    <p>Описание описание описание описание описание описание описание описание описание описание описание</p>
                 </header>
             </div>
 
@@ -39,25 +39,148 @@
             </div>
         </div>
 
-        <!-- Область загрузки файла -->
-        <div class="upload-area" id="uploadArea">
-            <p>Перетащите файл сюда или нажмите для выбора</p>
-            <input type="file" id="fileInput" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden>
+        <!-- Двухколоночный блок для загрузки файла и доп. информации -->
+        <div class="upload-info-section">
+            <!-- Левая колонка - область загрузки файла -->
+            <div class="column upload-column">
+                <h2>
+                    Загрузка документов
+                    <span class="info-tooltip" data-tooltip="Загрузите файл формата PDF или DOCX для анализа. Максимальный размер файла - 10 МБ. Система проанализирует документ и предоставит юридическую и экономическую оценку.">?</span>
+                </h2>
+
+                <div class="document-upload-carousel">
+                    <div class="upload-area-container">
+                        <div class="upload-area" id="uploadArea">
+                            <p>Перетащите файл сюда или нажмите для выбора</p>
+                            <input type="file" id="fileInput" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden>
+                        </div>
+                    </div>
+                    <!-- Выносим result-area за пределы upload-area-container -->
+                    <div class="result-area" id="result"></div>
+                </div>
+            </div>
+
+            <!-- Правая колонка - экономические калькуляторы -->
+            <div class="column calc-column">
+                <h2>
+                    Экономические калькуляторы
+                    <span class="info-tooltip" data-tooltip="Набор инструментов для расчета ключевых финансовых показателей. Калькуляторы помогут оценить экономическую эффективность инвестиций, период окупаемости и финансовые потоки.">?</span>
+                </h2>
+
+                <div class="calculator-carousel">
+                    <!-- Кнопки для навигации по карусели -->
+                    <button class="carousel-btn prev-btn" onclick="moveCarousel(-1)">&#10094;</button>
+                    <button class="carousel-btn next-btn" onclick="moveCarousel(1)">&#10095;</button>
+
+                    <!-- Контейнер карусели -->
+                    <div class="carousel-track" id="calculatorCarousel">
+                        <!-- Калькулятор Срока Окупаемости -->
+                        <div class="calculator-block slide">
+                            <h3>
+                                Срок окупаемости
+                                <span class="info-tooltip" data-tooltip="Период времени, за который доходы от инвестиций сравняются с первоначальными вложениями. Рассчитывается как отношение всех затрат (включая паушальный взнос и роялти) к ежемесячной прибыли.">?</span>
+                            </h3>
+                            <div class="calculator-form">
+                                <div class="form-row">
+                                    <label for="poInvestment">Размер вложений (₽):</label>
+                                    <input type="number" id="poInvestment" class="calc-input" value="1000000" oninput="calculatePaybackPeriod()">
+                                </div>
+                                <div class="form-row">
+                                    <label for="poFranchiseFee">Паушальный взнос (₽):</label>
+                                    <input type="number" id="poFranchiseFee" class="calc-input" value="200000" oninput="calculatePaybackPeriod()">
+                                </div>
+                                <div class="form-row">
+                                    <label for="poRoyalty">Роялти (₽):</label>
+                                    <input type="number" id="poRoyalty" class="calc-input" value="50000" oninput="calculatePaybackPeriod()">
+                                </div>
+                                <div class="form-row">
+                                    <label for="poMonthlyProfit">Планируемая прибыль (₽/мес):</label>
+                                    <input type="number" id="poMonthlyProfit" class="calc-input" value="100000" oninput="calculatePaybackPeriod()">
+                                </div>
+                                <div class="result-field">
+                                    <p>Срок окупаемости: <span id="poResult">-</span> месяцев</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Объединенный калькулятор ROI (Рентабельность инвестиций) -->
+                        <div class="calculator-block slide">
+                            <h3>
+                                Рентабельность инвестиций (ROI)
+                                <span class="info-tooltip" data-tooltip="Показатель эффективности инвестиций, выраженный в процентах. Рассчитывается по формуле: (Доход - Вложения) / Вложения × 100%. При расчете за первый год учитывается паушальный взнос.">?</span>
+                            </h3>
+                            <div class="calculator-form">
+                                <div class="form-row checkbox-row">
+                                    <label for="roiFirstYear" class="checkbox-label">
+                                        <input type="checkbox" id="roiFirstYear" onchange="toggleRoiFirstYear()">
+                                        За первый год
+                                    </label>
+                                </div>
+                                <div class="form-row">
+                                    <label for="roiIncome">Доход от вложений (₽):</label>
+                                    <input type="number" id="roiIncome" class="calc-input" value="1500000" onchange="recalculateROIBasedOnCheckbox()" oninput="recalculateROIBasedOnCheckbox()">
+                                </div>
+                                <div class="form-row">
+                                    <label for="roiInvestment">Вложения (₽):</label>
+                                    <input type="number" id="roiInvestment" class="calc-input" value="1000000" onchange="recalculateROIBasedOnCheckbox()" oninput="recalculateROIBasedOnCheckbox()">
+                                </div>
+                                <div class="form-row" id="franchiseFeeRow" style="display: none;">
+                                    <label for="roiFranchiseFee">Паушальный взнос (₽):</label>
+                                    <input type="number" id="roiFranchiseFee" class="calc-input" value="200000" onchange="calculateROIFirstYear()" oninput="calculateROIFirstYear()">
+                                </div>
+                                <div class="result-field">
+                                    <p>ROI: <span id="roiResult">-</span> %</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Калькулятор OCF (Денежный поток от операционной деятельности) -->
+                        <div class="calculator-block slide">
+                            <h3>
+                                Денежный поток (OCF)
+                                <span class="info-tooltip" data-tooltip="Операционный денежный поток показывает реальное движение денежных средств от основной деятельности. Рассчитывается по формуле: EBIT + Амортизация - Налоги.">?</span>
+                            </h3>
+                            <div class="calculator-form">
+                                <div class="form-row">
+                                    <label for="ocfEBIT">EBIT (₽):</label>
+                                    <input type="number" id="ocfEBIT" class="calc-input" value="500000" oninput="calculateOCF()">
+                                </div>
+                                <div class="form-row">
+                                    <label for="ocfDepreciation">Амортизация (₽):</label>
+                                    <input type="number" id="ocfDepreciation" class="calc-input" value="100000" oninput="calculateOCF()">
+                                </div>
+                                <div class="form-row">
+                                    <label for="ocfTaxes">Налоги (₽):</label>
+                                    <input type="number" id="ocfTaxes" class="calc-input" value="75000" oninput="calculateOCF()">
+                                </div>
+                                <div class="result-field">
+                                    <p>OCF: <span id="ocfResult">-</span> ₽</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Индикаторы страниц карусели -->
+                    <div class="carousel-indicators">
+                        <span class="indicator active" onclick="showSlide(0)"></span>
+                        <span class="indicator" onclick="showSlide(1)"></span>
+                        <span class="indicator" onclick="showSlide(2)"></span>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="result-area" id="result">        </div>
-        
         <!-- Заголовок анализа файла -->
         <h2 class="analysis-title" id="analysisTitle" style="display: none;"></h2>
-        
+
         <!-- Область результатов анализа (будет скрыта до завершения анализа) -->
         <div class="analysis-results" id="analysisResults" style="display: none;">
             <div class="analysis-columns">
                 <!-- Колонка с экономической экспертизой -->
                 <div class="analysis-column">
-                    <h3>Экономическая экспертиза</h3>
+                    <h3>Экономическая экспертиза <span class="info-tooltip" data-tooltip="Анализ экономических аспектов документа. Исследуются условия оплаты, сроки, штрафы, экономическая целесообразность и потенциальные финансовые риски. Оценка от 1 до 3, где 3 — наилучший результат.">?</span></h3>
                     <div class="score-container">
-                        <div class="score" id="economicScore">2</div>
+                        <div class="score score-info" id="economicScore" data-tooltip="Шкала оценки от 1 до 3: 1 — низкое качество (высокие риски), 2 — среднее качество (умеренные риски), 3 — высокое качество (низкие риски)">2</div>
                     </div>
                     <div class="factors-container">
                         <div class="factors-header">
@@ -70,12 +193,12 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Колонка с юридической экспертизой -->
                 <div class="analysis-column">
-                    <h3>Юридическая экспертиза</h3>
+                    <h3>Юридическая экспертиза <span class="info-tooltip" data-tooltip="Проверка документа на соответствие действующему законодательству. Анализируются права и обязанности сторон, гарантии, ответственность и другие юридически значимые аспекты. Оценка от 1 до 3, где 3 — наилучший результат.">?</span></h3>
                     <div class="score-container">
-                        <div class="score" id="legalScore">3</div>
+                        <div class="score score-info" id="legalScore" data-tooltip="Шкала оценки от 1 до 3: 1 — низкое качество (высокие риски), 2 — среднее качество (умеренные риски), 3 — высокое качество (низкие риски)">3</div>
                     </div>
                     <div class="factors-container">
                         <div class="factors-header">
@@ -89,21 +212,163 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Кнопки для скачивания -->
             <div class="download-buttons">
-                <button id="downloadReport" class="download-btn">Скачать отчет</button>
-                <button id="downloadContract" class="download-btn">Скачать проанализированный договор</button>
+                <button id="downloadReport" class="download-btn">Скачать отчет <span class="info-tooltip tooltip-top" data-tooltip="Скачать подробный отчет в формате PDF с результатами экономической и юридической экспертизы документа.">?</span></button>
+                <button id="downloadContract" class="download-btn">Скачать проанализированный договор <span class="info-tooltip tooltip-top" data-tooltip="Скачать исходный документ с внесенными исправлениями и комментариями от наших экспертов.">?</span></button>
             </div>
         </div>
     </div>
 
-    <!-- Контейнер для дополнительного описания -->
-    <div class="description-container">
-        <h2>Дополнительно</h2>
-        <p>Тут будут калькуляторы и доп информация</p>
-    </div>
-
     <script src="script.js"></script>
-    </body>
+    <script>
+        // Функция для расчета Срока окупаемости
+        function calculatePaybackPeriod() {
+            const investment = parseFloat(document.getElementById('poInvestment').value);
+            const franchiseFee = parseFloat(document.getElementById('poFranchiseFee').value);
+            const royalty = parseFloat(document.getElementById('poRoyalty').value);
+            const monthlyProfit = parseFloat(document.getElementById('poMonthlyProfit').value);
+
+            // Срок окупаемости = размер вложений (все планируемые затраты+паушальный взнос+роялти) / планируемая прибыль (за месяц)
+            const totalInvestment = investment + franchiseFee + royalty;
+            const paybackPeriod = totalInvestment / monthlyProfit;
+
+            document.getElementById('poResult').textContent = paybackPeriod.toLocaleString('ru-RU', {
+                maximumFractionDigits: 1,
+                minimumFractionDigits: 1
+            });
+        }
+
+        // Функция для расчета ROI за первый год
+        function calculateFirstYearROI() {
+            const income = parseFloat(document.getElementById('roiFirstYearIncome').value);
+            const investment = parseFloat(document.getElementById('roiFirstYearInvestment').value);
+            const franchiseFee = parseFloat(document.getElementById('roiFirstYearFranchiseFee').value);
+
+            // ROI = (Доход от вложений – Вложения + паушальный взнос) / Вложения * 100%
+            const roi = ((income - investment + franchiseFee) / investment) * 100;
+
+            document.getElementById('roiFirstYearResult').textContent = roi.toLocaleString('ru-RU', {
+                maximumFractionDigits: 2,
+                minimumFractionDigits: 2
+            });
+        }
+
+        // Функция для расчета ROI (Рентабельность инвестиций)
+        function calculateROI() {
+            const income = parseFloat(document.getElementById('roiIncome').value);
+            const investment = parseFloat(document.getElementById('roiInvestment').value);
+
+            // ROI = (Доход от вложений – Вложения) / Вложения * 100%
+            const roi = ((income - investment) / investment) * 100;
+
+            document.getElementById('roiResult').textContent = roi.toLocaleString('ru-RU', {
+                maximumFractionDigits: 2,
+                minimumFractionDigits: 2
+            });
+        }
+
+        // Функция для расчета OCF (Денежный поток от операционной деятельности)
+        function calculateOCF() {
+            const ebit = parseFloat(document.getElementById('ocfEBIT').value);
+            const depreciation = parseFloat(document.getElementById('ocfDepreciation').value);
+            const taxes = parseFloat(document.getElementById('ocfTaxes').value);
+
+            // OCF = EBIT + Амортизация − Налоги
+            const ocf = ebit + depreciation - taxes;
+
+            document.getElementById('ocfResult').textContent = ocf.toLocaleString('ru-RU', {
+                maximumFractionDigits: 2,
+                minimumFractionDigits: 2
+            });
+        }
+
+        // Переменные для карусели
+        let currentSlide = 0;
+        const totalSlides = 3; // Было 4, теперь 3, так как объединили два калькулятора ROI
+
+        // Функция для обновления отображения карусели
+        function updateCarousel() {
+            const track = document.getElementById('calculatorCarousel');
+            track.style.transform = `translateX(-${currentSlide * 100}%)`;
+
+            // Обновление индикаторов
+            const indicators = document.querySelectorAll('.indicator');
+            indicators.forEach((indicator, index) => {
+                if (index === currentSlide) {
+                    indicator.classList.add('active');
+                } else {
+                    indicator.classList.remove('active');
+                }
+            });
+        }
+
+        // Функция для перемещения карусели
+        function moveCarousel(direction) {
+            currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+            updateCarousel();
+        }
+
+        // Функция для показа конкретного слайда
+        function showSlide(slideIndex) {
+            currentSlide = slideIndex;
+            updateCarousel();
+        }
+
+        // Функция для поддержки свайпов на мобильных устройствах
+        document.addEventListener('DOMContentLoaded', function () {
+            // Расчеты при загрузке страницы
+            calculatePaybackPeriod();
+            calculateROI();
+            calculateOCF();
+
+            // Инициализация состояния ROI калькулятора
+            const isFirstYear = document.getElementById('roiFirstYear').checked;
+            if (isFirstYear) {
+                toggleRoiFirstYear(); // Установка правильного состояния при загрузке страницы
+            }
+
+            // Настройка сенсорного управления (свайпы)
+            const carousel = document.querySelector('.calculator-carousel');
+            let startX;
+            let isSwiping = false;
+
+            carousel.addEventListener('touchstart', function (e) {
+                startX = e.touches[0].clientX;
+                isSwiping = true;
+            });
+
+            carousel.addEventListener('touchmove', function (e) {
+                if (!isSwiping) return;
+                const currentX = e.touches[0].clientX;
+                const diff = startX - currentX;
+
+                // Предотвращаем скролл страницы при свайпе
+                if (Math.abs(diff) > 5) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+
+            carousel.addEventListener('touchend', function (e) {
+                if (!isSwiping) return;
+                const endX = e.changedTouches[0].clientX;
+                const diff = startX - endX;
+
+                // Если свайп достаточно длинный
+                if (Math.abs(diff) > 50) {
+                    if (diff > 0) {
+                        // Свайп влево - следующий слайд
+                        moveCarousel(1);
+                    } else {
+                        // Свайп вправо - предыдущий слайд
+                        moveCarousel(-1);
+                    }
+                }
+
+                isSwiping = false;
+            });
+        });
+    </script>
+</body>
 </html>

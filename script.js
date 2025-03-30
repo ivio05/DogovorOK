@@ -1,3 +1,14 @@
+// Функция для выбора правильного метода расчета в зависимости от состояния чекбокса
+function recalculateROIBasedOnCheckbox() {
+    const isFirstYear = document.getElementById('roiFirstYear').checked;
+
+    if (isFirstYear) {
+        calculateROIFirstYear();
+    } else {
+        calculateROI();
+    }
+}
+
 const uploadArea = document.getElementById('uploadArea');
 const fileInput = document.getElementById('fileInput');
 const resultDiv = document.getElementById('result');
@@ -16,7 +27,7 @@ let invalidFilesUploaded = 0;
 
 // Сохраняем изначальное содержимое области загрузки
 const originalUploadAreaContent = uploadArea.innerHTML;
-const originalBackgroundColor = '#f0f8ff'; 
+const originalBackgroundColor = '#f0f8ff';
 
 let currentFileName = '';
 
@@ -111,14 +122,14 @@ function checkFileValidity(file) {
         setTimeout(() => {
             uploadArea.style.backgroundColor = '#CCFFCC';
             resolve(true); // Всегда возвращаем успешный результат
-        }, 2000); 
+        }, 2000);
     });
 }
 
 // Функция для отображения случайной оценки и применения соответствующего цвета
 function displayScore(element, score) {
     element.textContent = score;
-    element.className = 'score score-' + score;
+    element.className = 'score score-' + score + ' score-info';
 }
 
 // Функция для создания строки с фактором
@@ -178,7 +189,7 @@ function analyzeFile(file) {
                 economicScore: economicScore,
                 legalScore: legalScore
             });
-        }, 3000); 
+        }, 3000);
     });
 }
 
@@ -248,4 +259,91 @@ function sendEvent(eventName, data = {}) {
             referrer: document.referrer,
         })
     }).catch(err => console.error('Ошибка при отправке события:', err));
+}
+
+// Функции калькуляторов
+
+// Функция для расчета Срока окупаемости
+function calculatePaybackPeriod() {
+    const investment = parseFloat(document.getElementById('poInvestment').value);
+    const franchiseFee = parseFloat(document.getElementById('poFranchiseFee').value);
+    const royalty = parseFloat(document.getElementById('poRoyalty').value);
+    const monthlyProfit = parseFloat(document.getElementById('poMonthlyProfit').value);
+
+    // Срок окупаемости = размер вложений (все планируемые затраты+паушальный взнос+роялти) / планируемая прибыль (за месяц)
+    const totalInvestment = investment + franchiseFee + royalty;
+    const paybackPeriod = totalInvestment / monthlyProfit;
+
+    document.getElementById('poResult').textContent = paybackPeriod.toLocaleString('ru-RU', {
+        maximumFractionDigits: 1,
+        minimumFractionDigits: 1
+    });
+}
+
+// Функция для переключения отображения поля паушального взноса
+function toggleRoiFirstYear() {
+    const isFirstYear = document.getElementById('roiFirstYear').checked;
+    const franchiseFeeRow = document.getElementById('franchiseFeeRow');
+
+    console.log("Переключение режима ROI. За первый год:", isFirstYear);
+
+    if (isFirstYear) {
+        franchiseFeeRow.style.display = 'flex';
+        // Автоматический пересчет при включении чекбокса
+        calculateROIFirstYear();
+    } else {
+        franchiseFeeRow.style.display = 'none';
+        // Автоматический пересчет при выключении чекбокса
+        calculateROI();
+    }
+}
+
+// Обычная функция для расчета ROI (Рентабельность инвестиций)
+function calculateROI() {
+    const income = parseFloat(document.getElementById('roiIncome').value);
+    const investment = parseFloat(document.getElementById('roiInvestment').value);
+
+    // Обычный расчет ROI: (Доход от вложений – Вложения) / Вложения * 100%
+    const roi = ((income - investment) / investment) * 100;
+    console.log("Расчет обычного ROI:");
+    console.log("Доход:", income, "Вложения:", investment);
+    console.log("Формула: ((", income, "-", investment, ") /", investment, ") * 100 =", roi);
+
+    document.getElementById('roiResult').textContent = roi.toLocaleString('ru-RU', {
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 2
+    });
+}
+
+// Специальная функция для расчета ROI за первый год
+function calculateROIFirstYear() {
+    const income = parseFloat(document.getElementById('roiIncome').value);
+    const investment = parseFloat(document.getElementById('roiInvestment').value);
+    const franchiseFee = parseFloat(document.getElementById('roiFranchiseFee').value) || 0;
+
+    // Расчет ROI за первый год: (Доход от вложений – Вложения + паушальный взнос) / Вложения * 100%
+    const roi = ((income - investment - franchiseFee) / investment) * 100;
+    console.log("Расчет ROI за первый год:");
+    console.log("Доход:", income, "Вложения:", investment, "Паушальный взнос:", franchiseFee);
+    console.log("Формула: ((", income, "-", investment, "-", franchiseFee, ") /", investment, ") * 100 =", roi);
+
+    document.getElementById('roiResult').textContent = roi.toLocaleString('ru-RU', {
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 2
+    });
+}
+
+// Функция для расчета OCF (Денежный поток от операционной деятельности)
+function calculateOCF() {
+    const ebit = parseFloat(document.getElementById('ocfEBIT').value);
+    const depreciation = parseFloat(document.getElementById('ocfDepreciation').value);
+    const taxes = parseFloat(document.getElementById('ocfTaxes').value);
+
+    // OCF = EBIT + Амортизация − Налоги
+    const ocf = ebit + depreciation - taxes;
+
+    document.getElementById('ocfResult').textContent = ocf.toLocaleString('ru-RU', {
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 2
+    });
 }
