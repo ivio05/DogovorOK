@@ -552,15 +552,15 @@ header {
 
 /* Цвета для оценок */
 .score-1 {
-    background-color: #dc3545; /* Красный */
+    background-color: #333; 
 }
 
 .score-2 {
-    background-color: #fd7e14; /* Оранжевый */
+    background-color: #333; 
 }
 
 .score-3 {
-    background-color: #28a745; /* Зеленый */
+    background-color: #333; 
 }
 
 /* Стили для контейнера факторов */

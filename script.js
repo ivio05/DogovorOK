@@ -37,38 +37,6 @@ const allowedFileTypes = [
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document' // DOCX
 ];
 
-const economicFactorsExamples = [
-    { factor: "Фактор", result: "Результат", link: "#" },
-    { factor: "Фактор", result: "Результат", link: "#" },
-    { factor: "Фактор", result: "Результат", link: "#" },
-    { factor: "Фактор", result: "Результат", link: "#" },
-    { factor: "Фактор", result: "Результат", link: "#" },
-    { factor: "Фактор", result: "Результат", link: "#" },
-    { factor: "Фактор", result: "Результат", link: "#" },
-    { factor: "Фактор", result: "Результат", link: "#" },
-    { factor: "Фактор", result: "Результат", link: "#" },
-    { factor: "Фактор", result: "Результат", link: "#" },
-    { factor: "Фактор", result: "Результат", link: "#" },
-    { factor: "Фактор", result: "Результат", link: "#" }
-];
-
-const legalFactorsExamples = [
-    { factor: "Фактор", result: "Результат", link: "#" },
-    { factor: "Фактор", result: "Результат", link: "#" },
-    { factor: "Фактор", result: "Результат", link: "#" },
-    { factor: "Фактор", result: "Результат", link: "#" },
-    { factor: "Фактор", result: "Результат", link: "#" },
-    { factor: "Фактор", result: "Результат", link: "#" },
-    { factor: "Фактор", result: "Результат", link: "#" },
-    { factor: "Фактор", result: "Результат", link: "#" },
-    { factor: "Фактор", result: "Результат", link: "#" },
-    { factor: "Фактор", result: "Результат", link: "#" },
-    { factor: "Фактор", result: "Результат", link: "#" },
-    { factor: "Фактор", result: "Результат", link: "#" },
-    { factor: "Фактор", result: "Результат", link: "#" },
-    { factor: "Фактор", result: "Результат", link: "#" }
-];
-
 // Функция для сброса области загрузки к изначальному состоянию
 function resetUploadArea() {
     uploadArea.innerHTML = originalUploadAreaContent;
@@ -132,37 +100,90 @@ function displayScore(element, score) {
     element.className = 'score score-' + score + ' score-info';
 }
 
-// Функция для создания строки с фактором
-function createFactorElement(factor) {
+// Функция для создания строки с экономическим фактором
+function createEconomicFactorElement(factor, value) {
     const factorElement = document.createElement('div');
     factorElement.className = 'factor-item';
 
     // Добавляем название фактора
     const factorName = document.createElement('span');
-    factorName.textContent = factor.factor;
+    factorName.textContent = factor;
     factorElement.appendChild(factorName);
 
-    // Добавляем результат
+    // Добавляем результат с форматированием
     const factorResult = document.createElement('span');
-    factorResult.textContent = factor.result;
+    if (factor === 'Роялти') {
+        factorResult.textContent = value + '%';
+    } else {
+        factorResult.textContent = value.toLocaleString('ru-RU') + ' руб.';
+    }
     factorElement.appendChild(factorResult);
 
     // Добавляем ссылку
     const factorLink = document.createElement('a');
-    factorLink.href = factor.link;
+    factorLink.href = "#";
     factorLink.textContent = 'Ссылка';
     factorElement.appendChild(factorLink);
 
     return factorElement;
 }
 
-// Функция для заполнения списка факторов
-function populateFactors(container, factors) {
+// Функция для создания строки с юридическим фактором
+function createLegalFactorElement(question, value) {
+    const factorElement = document.createElement('div');
+    factorElement.className = 'factor-item';
+
+    // Формируем утверждение на основе вопроса и значения
+    let statement = '';
+    if (question === 'Правообладатель вправе расторгнуть договор без объяснения причин?') {
+        statement = value === 1
+            ? 'Правообладатель вправе расторгнуть договор без объяснения причин'
+            : 'Правообладатель не вправе расторгнуть договор без объяснения причин';
+    } else if (question === 'Даются ли Пользователю права на товарный знак?') {
+        statement = value === 1
+            ? 'Пользователю даются права на товарный знак'
+            : 'Пользователю не даются права на товарный знак';
+    } else if (question === 'Является ли Правообладатель юридическим лицом?') {
+        statement = value === 1
+            ? 'Правообладатель является юридическим лицом'
+            : 'Правообладатель не является юридическим лицом';
+    }
+
+    // Добавляем объединенное утверждение в первую колонку
+    const factorStatement = document.createElement('span');
+    factorStatement.textContent = statement;
+    factorStatement.style.gridColumn = '1 / 3'; // Растягиваем на две колонки
+    factorElement.appendChild(factorStatement);
+
+    // Добавляем пустой элемент для сохранения структуры грида
+    const emptyElement = document.createElement('span');
+    factorElement.appendChild(emptyElement);
+
+    // Добавляем ссылку
+    const factorLink = document.createElement('a');
+    factorLink.href = "#";
+    factorLink.textContent = 'Ссылка';
+    factorElement.appendChild(factorLink);
+
+    return factorElement;
+}
+
+// Функция для заполнения списка экономических факторов
+function populateEconomicFactors(container, factors) {
     container.innerHTML = '';
 
-    factors.forEach(factor => {
-        container.appendChild(createFactorElement(factor));
-    });
+    for (const [factor, value] of Object.entries(factors)) {
+        container.appendChild(createEconomicFactorElement(factor, value));
+    }
+}
+
+// Функция для заполнения списка юридических факторов
+function populateLegalFactors(container, factors) {
+    container.innerHTML = '';
+
+    for (const [question, value] of Object.entries(factors)) {
+        container.appendChild(createLegalFactorElement(question, value));
+    }
 }
 
 // Функция-заглушка для анализа файла
@@ -170,26 +191,47 @@ function analyzeFile(file) {
     return new Promise((resolve) => {
         resultDiv.innerHTML = 'Анализ файла...';
 
-        // Имитация длительного анализа
-        setTimeout(() => {
-            const economicScore = Math.floor(Math.random() * 3) + 1;
-            const legalScore = Math.floor(Math.random() * 3) + 1;
+        // Здесь должна быть заглушка словаря с данными анализа
+        const analysisData = {
+            'Роялти': 35,
+            'Паушальный взнос': 1000000,
+            'Штраф': 1000000,
+            'Правообладатель вправе расторгнуть договор без объяснения причин?': 1,
+            'Даются ли Пользователю права на товарный знак?': 1,
+            'Является ли Правообладатель юридическим лицом?': 1
+        };
 
-            displayScore(economicScoreDiv, economicScore);
-            displayScore(legalScoreDiv, legalScore);
+        // Разделение словаря на экономические и юридические факторы
+        const economicFactors = {
+            'Роялти': analysisData['Роялти'],
+            'Паушальный взнос': analysisData['Паушальный взнос'],
+            'Штраф': analysisData['Штраф']
+        };
 
-            populateFactors(economicFactorsDiv, economicFactorsExamples);
-            populateFactors(legalFactorsDiv, legalFactorsExamples);
+        const legalFactors = {
+            'Правообладатель вправе расторгнуть договор без объяснения причин?': analysisData['Правообладатель вправе расторгнуть договор без объяснения причин?'],
+            'Даются ли Пользователю права на товарный знак?': analysisData['Даются ли Пользователю права на товарный знак?'],
+            'Является ли Правообладатель юридическим лицом?': analysisData['Является ли Правообладатель юридическим лицом?']
+        };
 
-            analysisResultsDiv.style.display = 'block';
+        // Генерация случайных оценок
+        const economicScore = /*Math.floor(Math.random() * 3) + */1;
+        const legalScore = /*Math.floor(Math.random() * 3) + */1;
 
-            resolve({
-                success: true,
-                message: 'Файл успешно проанализирован',
-                economicScore: economicScore,
-                legalScore: legalScore
-            });
-        }, 3000);
+        displayScore(economicScoreDiv, economicScore);
+        displayScore(legalScoreDiv, legalScore);
+
+        populateEconomicFactors(economicFactorsDiv, economicFactors);
+        populateLegalFactors(legalFactorsDiv, legalFactors);
+
+        analysisResultsDiv.style.display = 'block';
+
+        resolve({
+            success: true,
+            message: 'Файл успешно проанализирован',
+            economicScore: economicScore,
+            legalScore: legalScore
+        });
     });
 }
 
