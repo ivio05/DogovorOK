@@ -86,11 +86,8 @@ function isValidFileType(file) {
 function checkFileValidity(file) {
     return new Promise((resolve) => {
         resultDiv.innerHTML = 'Проверка файла на корректность...';
-        // Имитация длительной проверки
-        setTimeout(() => {
-            uploadArea.style.backgroundColor = '#CCFFCC';
-            resolve(true); // Всегда возвращаем успешный результат
-        }, 2000);
+        uploadArea.style.backgroundColor = '#CCFFCC';
+        resolve(true); // Всегда возвращаем успешный результат
     });
 }
 
@@ -149,17 +146,17 @@ function createLegalFactorElement(question, value) {
             : 'Правообладатель не является юридическим лицом';
     }
 
-    // Добавляем объединенное утверждение в первую колонку
+    // Добавляем объединенное утверждение 
     const factorStatement = document.createElement('span');
     factorStatement.textContent = statement;
-    factorStatement.style.gridColumn = '1 / 3'; // Растягиваем на две колонки
+    factorStatement.style.width = '100%';
     factorElement.appendChild(factorStatement);
 
-    // Добавляем пустой элемент для сохранения структуры грида
-    const emptyElement = document.createElement('span');
-    factorElement.appendChild(emptyElement);
+    // Добавляем пустой элемент для второй колонки
+    const emptyCol = document.createElement('span');
+    factorElement.appendChild(emptyCol);
 
-    // Добавляем ссылку
+    // Добавляем ссылку в третью колонку
     const factorLink = document.createElement('a');
     factorLink.href = "#";
     factorLink.textContent = 'Ссылка';
@@ -181,6 +178,12 @@ function populateEconomicFactors(container, factors) {
 function populateLegalFactors(container, factors) {
     container.innerHTML = '';
 
+    // Обновляем заголовок таблицы юридических факторов
+    const factorsHeader = document.querySelector('.analysis-column:nth-child(2) .factors-header');
+    if (factorsHeader) {
+        factorsHeader.innerHTML = '<span>Утверждение</span><span></span><span>Ссылка</span>';
+    }
+
     for (const [question, value] of Object.entries(factors)) {
         container.appendChild(createLegalFactorElement(question, value));
     }
@@ -194,7 +197,7 @@ function analyzeFile(file) {
         // Здесь должна быть заглушка словаря с данными анализа
         const analysisData = {
             'Роялти': 35,
-            'Паушальный взнос': 1000000,
+            'Паушальный взнос': 10000000,
             'Штраф': 1000000,
             'Правообладатель вправе расторгнуть договор без объяснения причин?': 1,
             'Даются ли Пользователю права на товарный знак?': 1,

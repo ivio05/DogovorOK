@@ -661,6 +661,31 @@ a {
         text-decoration: underline;
     }
 
+/* Специальные стили для юридической экспертизы */
+.analysis-column:nth-child(2) .factor-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 0fr 80px;
+}
+
+    .analysis-column:nth-child(2) .factor-item span:first-child {
+        padding-right: 10px;
+        text-align: left;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+.analysis-column:nth-child(2) .factors-header {
+    grid-template-columns: minmax(0, 1fr) 0fr 80px;
+}
+
+/* Выравнивание ссылки по центру в ячейке */
+.factor-item a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
 @media (max-width: 768px) {
     .top-section {
         flex-direction: column;
