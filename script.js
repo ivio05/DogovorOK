@@ -86,8 +86,11 @@ function isValidFileType(file) {
 function checkFileValidity(file) {
     return new Promise((resolve) => {
         resultDiv.innerHTML = 'Проверка файла на корректность...';
-        uploadArea.style.backgroundColor = '#CCFFCC';
-        resolve(true); // Всегда возвращаем успешный результат
+        // Имитация длительной проверки
+        setTimeout(() => {
+            uploadArea.style.backgroundColor = '#CCFFCC';
+            resolve(true); // Всегда возвращаем успешный результат
+        }, 2000);
     });
 }
 
@@ -146,17 +149,16 @@ function createLegalFactorElement(question, value) {
             : 'Правообладатель не является юридическим лицом';
     }
 
-    // Добавляем объединенное утверждение 
+    // Добавляем утверждение в колонку "Фактор"
     const factorStatement = document.createElement('span');
     factorStatement.textContent = statement;
-    factorStatement.style.width = '100%';
     factorElement.appendChild(factorStatement);
 
-    // Добавляем пустой элемент для второй колонки
-    const emptyCol = document.createElement('span');
-    factorElement.appendChild(emptyCol);
+    // Добавляем пустой элемент в колонку "Результат"
+    const emptyElement = document.createElement('span');
+    factorElement.appendChild(emptyElement);
 
-    // Добавляем ссылку в третью колонку
+    // Добавляем ссылку в колонку "Ссылка"
     const factorLink = document.createElement('a');
     factorLink.href = "#";
     factorLink.textContent = 'Ссылка';
@@ -178,10 +180,11 @@ function populateEconomicFactors(container, factors) {
 function populateLegalFactors(container, factors) {
     container.innerHTML = '';
 
-    // Обновляем заголовок таблицы юридических факторов
-    const factorsHeader = document.querySelector('.analysis-column:nth-child(2) .factors-header');
-    if (factorsHeader) {
-        factorsHeader.innerHTML = '<span>Утверждение</span><span></span><span>Ссылка</span>';
+    // Обновляем заголовок для юридической таблицы
+    const legalHeaderContainer = container.closest('.analysis-column').querySelector('.factors-header');
+    if (legalHeaderContainer) {
+        legalHeaderContainer.innerHTML = '<span>Фактор</span><span>Ссылка</span>';
+        legalHeaderContainer.style.gridTemplateColumns = '1fr 80px';
     }
 
     for (const [question, value] of Object.entries(factors)) {
@@ -217,24 +220,26 @@ function analyzeFile(file) {
             'Является ли Правообладатель юридическим лицом?': analysisData['Является ли Правообладатель юридическим лицом?']
         };
 
-        // Генерация случайных оценок
-        const economicScore = /*Math.floor(Math.random() * 3) + */1;
-        const legalScore = /*Math.floor(Math.random() * 3) + */1;
+        // Имитация длительного анализа
+        setTimeout(() => {
+            const economicScore = 1;
+            const legalScore = 1;
+            //Math.floor(Math.random() * 3) + 
+            displayScore(economicScoreDiv, economicScore);
+            displayScore(legalScoreDiv, legalScore);
 
-        displayScore(economicScoreDiv, economicScore);
-        displayScore(legalScoreDiv, legalScore);
+            populateEconomicFactors(economicFactorsDiv, economicFactors);
+            populateLegalFactors(legalFactorsDiv, legalFactors);
 
-        populateEconomicFactors(economicFactorsDiv, economicFactors);
-        populateLegalFactors(legalFactorsDiv, legalFactors);
+            analysisResultsDiv.style.display = 'block';
 
-        analysisResultsDiv.style.display = 'block';
-
-        resolve({
-            success: true,
-            message: 'Файл успешно проанализирован',
-            economicScore: economicScore,
-            legalScore: legalScore
-        });
+            resolve({
+                success: true,
+                message: 'Файл успешно проанализирован',
+                economicScore: economicScore,
+                legalScore: legalScore
+            });
+        }, 20000);
     });
 }
 
