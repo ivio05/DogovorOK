@@ -19,7 +19,6 @@ const legalScoreDiv = document.getElementById('legalScore');
 const economicFactorsDiv = document.getElementById('economicFactors');
 const legalFactorsDiv = document.getElementById('legalFactors');
 const downloadReportBtn = document.getElementById('downloadReport');
-const downloadContractBtn = document.getElementById('downloadContract');
 
 let totalFilesUploaded = 0;
 let validFilesUploaded = 0;
@@ -133,20 +132,32 @@ function createLegalFactorElement(question, value) {
     const factorElement = document.createElement('div');
     factorElement.className = 'factor-item';
 
-    // Формируем утверждение на основе вопроса и значения
+    // Формируем утверждение и ссылки на основе вопроса и значения
     let statement = '';
+    let href = '';
+    let multipleLinks = null;
+
     if (question === 'Правообладатель вправе расторгнуть договор без объяснения причин?') {
         statement = value === 1
             ? 'Правообладатель вправе расторгнуть договор без объяснения причин'
             : 'Правообладатель не вправе расторгнуть договор без объяснения причин';
+
+        // Для этого фактора создаем мультиссылку
+        multipleLinks = [
+            { text: 'Ст. 10 ГК', url: 'https://www.consultant.ru/document/cons_doc_LAW_5142/62129e15ab0e6008725f43d63284aef0bb12c2cf/' },
+            { text: 'Ст. 432 ГК', url: 'https://www.consultant.ru/document/cons_doc_LAW_5142/adbefccc8d538d42038164bb81d886c76e719d63/' },
+            { text: 'Ст. 1033 ГК', url: 'https://www.consultant.ru/document/cons_doc_LAW_9027/fee922b3cd2e5c6f09bdc7372d2f857da2a2f64d/' }
+        ];
     } else if (question === 'Даются ли Пользователю права на товарный знак?') {
         statement = value === 1
             ? 'Пользователю даются права на товарный знак'
             : 'Пользователю не даются права на товарный знак';
+        href = 'https://www.consultant.ru/document/cons_doc_LAW_9027/49c2afdf04c1ba13e815aa8b44287cd4b6cac9f5/';
     } else if (question === 'Является ли Правообладатель юридическим лицом?') {
         statement = value === 1
             ? 'Правообладатель является юридическим лицом'
             : 'Правообладатель не является юридическим лицом';
+        href = 'https://www.consultant.ru/document/cons_doc_LAW_9027/49c2afdf04c1ba13e815aa8b44287cd4b6cac9f5/';
     }
 
     // Добавляем утверждение в колонку "Фактор"
@@ -158,11 +169,37 @@ function createLegalFactorElement(question, value) {
     const emptyElement = document.createElement('span');
     factorElement.appendChild(emptyElement);
 
-    // Добавляем ссылку в колонку "Ссылка"
-    const factorLink = document.createElement('a');
-    factorLink.href = "#";
-    factorLink.textContent = 'Ссылка';
-    factorElement.appendChild(factorLink);
+    // Добавляем ссылку или дропдаун с множественными ссылками в колонку "Ссылка"
+    if (multipleLinks) {
+        const linkContainer = document.createElement('div');
+        linkContainer.className = 'link-dropdown';
+
+        const mainLink = document.createElement('a');
+        mainLink.href = "#";
+        mainLink.textContent = 'Ссылки';
+        mainLink.className = 'main-link';
+        linkContainer.appendChild(mainLink);
+
+        const dropdownContent = document.createElement('div');
+        dropdownContent.className = 'dropdown-content';
+
+        multipleLinks.forEach(link => {
+            const linkElement = document.createElement('a');
+            linkElement.href = link.url;
+            linkElement.textContent = link.text;
+            linkElement.target = '_blank';
+            dropdownContent.appendChild(linkElement);
+        });
+
+        linkContainer.appendChild(dropdownContent);
+        factorElement.appendChild(linkContainer);
+    } else {
+        const factorLink = document.createElement('a');
+        factorLink.href = href;
+        factorLink.textContent = 'Ссылка';
+        factorLink.target = '_blank';
+        factorElement.appendChild(factorLink);
+    }
 
     return factorElement;
 }
@@ -183,13 +220,30 @@ function populateLegalFactors(container, factors) {
     // Обновляем заголовок для юридической таблицы
     const legalHeaderContainer = container.closest('.analysis-column').querySelector('.factors-header');
     if (legalHeaderContainer) {
-        legalHeaderContainer.innerHTML = '<span>Фактор</span><span>Ссылка</span>';
-        legalHeaderContainer.style.gridTemplateColumns = '1fr 80px';
+        legalHeaderContainer.innerHTML = '<span>Фактор</span><span style="display:none;"></span><span style="text-align:center;">Ссылка</span>';
     }
 
     for (const [question, value] of Object.entries(factors)) {
         container.appendChild(createLegalFactorElement(question, value));
     }
+
+    // Добавляем обработчики событий для всех дропдаунов с ссылками
+    document.querySelectorAll('.link-dropdown .main-link').forEach(link => {
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+            const dropdown = this.nextElementSibling;
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        });
+    });
+
+    // Закрываем все дропдауны при клике вне них
+    document.addEventListener('click', function (e) {
+        if (!e.target.matches('.main-link')) {
+            document.querySelectorAll('.dropdown-content').forEach(dropdown => {
+                dropdown.style.display = 'none';
+            });
+        }
+    });
 }
 
 // Функция-заглушка для анализа файла
@@ -224,7 +278,9 @@ function analyzeFile(file) {
         setTimeout(() => {
             const economicScore = 1;
             const legalScore = 1;
+
             //Math.floor(Math.random() * 3) + 
+
             displayScore(economicScoreDiv, economicScore);
             displayScore(legalScoreDiv, legalScore);
 
@@ -239,18 +295,13 @@ function analyzeFile(file) {
                 economicScore: economicScore,
                 legalScore: legalScore
             });
-        }, 20000);
+        }, 3000);
     });
 }
 
 // Обработчики событий для кнопок скачивания
 downloadReportBtn.addEventListener('click', () => {
     alert('Загрузка отчета для файла: ' + currentFileName);
-    // Здесь будет реальная функция скачивания
-});
-
-downloadContractBtn.addEventListener('click', () => {
-    alert('Загрузка проанализированного договора: ' + currentFileName);
     // Здесь будет реальная функция скачивания
 });
 

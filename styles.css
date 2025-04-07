@@ -552,15 +552,15 @@ header {
 
 /* Цвета для оценок */
 .score-1 {
-    background-color: #333; 
+    background-color: #333333; /* Темно-серый */
 }
 
 .score-2 {
-    background-color: #333; 
+    background-color: #222222; /* Еще темнее серый */
 }
 
 .score-3 {
-    background-color: #333; 
+    background-color: #111111; /* Почти черный */
 }
 
 /* Стили для контейнера факторов */
@@ -603,13 +603,108 @@ header {
         color: white;
         border-radius: 4px;
         text-align: center;
-        display: block;
+        text-decoration: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
     }
 
         .factor-item a:hover {
             background-color: #0069d9;
             text-decoration: none;
         }
+
+/* Специальные стили для юридической экспертизы */
+.analysis-column:nth-child(2) .factors-header {
+    display: grid;
+    grid-template-columns: 1fr 0fr 80px;
+}
+
+    .analysis-column:nth-child(2) .factors-header span:last-child {
+        text-align: center;
+        width: 80px;
+        justify-self: center;
+    }
+
+    .analysis-column:nth-child(2) .factors-header span:nth-child(2) {
+        display: none;
+    }
+
+.analysis-column:nth-child(2) .factor-item {
+    display: grid;
+    grid-template-columns: 1fr 0fr 80px;
+}
+
+    .analysis-column:nth-child(2) .factor-item span:first-child {
+        padding-right: 10px;
+        text-align: left;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+/* Стили для выпадающего меню с множественными ссылками */
+.link-dropdown {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height: 100%;
+}
+
+    .link-dropdown .main-link {
+        display: inline-block;
+        padding: 0.25rem 0.5rem;
+        background-color: #007bff;
+        color: white;
+        border-radius: 4px;
+        text-decoration: none;
+        width: 80px;
+        box-sizing: border-box;
+        text-align: center;
+    }
+
+        .link-dropdown .main-link:hover {
+            background-color: #0069d9;
+        }
+
+    .link-dropdown .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 150px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+        right: 0;
+        border-radius: 4px;
+        overflow: hidden;
+        top: 100%;
+    }
+
+        .link-dropdown .dropdown-content a {
+            color: black;
+            padding: 10px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+            font-size: 0.9rem;
+            width: 100%;
+            border-bottom: 1px solid #eee;
+            background-color: transparent;
+        }
+
+            .link-dropdown .dropdown-content a:last-child {
+                border-bottom: none;
+            }
+
+            .link-dropdown .dropdown-content a:hover {
+                background-color: #f1f1f1;
+            }
+
+    .link-dropdown:hover .dropdown-content {
+        display: block;
+    }
 
 /* Стили для заголовка анализа файла */
 .analysis-title {
@@ -660,31 +755,6 @@ a {
     a:hover {
         text-decoration: underline;
     }
-
-/* Специальные стили для юридической экспертизы */
-.analysis-column:nth-child(2) .factor-item {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 0fr 80px;
-}
-
-    .analysis-column:nth-child(2) .factor-item span:first-child {
-        padding-right: 10px;
-        text-align: left;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-.analysis-column:nth-child(2) .factors-header {
-    grid-template-columns: minmax(0, 1fr) 0fr 80px;
-}
-
-/* Выравнивание ссылки по центру в ячейке */
-.factor-item a {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-}
 
 @media (max-width: 768px) {
     .top-section {
