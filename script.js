@@ -448,3 +448,35 @@ function calculateOCF() {
         minimumFractionDigits: 2
     });
 }
+
+// Функция для управления аккордеоном FAQ
+function toggleAccordion(header) {
+    // Получаем родительский элемент (весь аккордеон-айтем)
+    const item = header.parentElement;
+
+    // Если текущий элемент уже открыт, просто закрываем его
+    if (item.classList.contains('active')) {
+        item.classList.remove('active');
+        return;
+    }
+
+    // Закрываем все открытые элементы аккордеона
+    const allItems = document.querySelectorAll('.accordion-item');
+    allItems.forEach(accordionItem => {
+        accordionItem.classList.remove('active');
+    });
+
+    // Открываем текущий элемент
+    item.classList.add('active');
+}
+
+// Инициализация при загрузке страницы
+document.addEventListener('DOMContentLoaded', function () {
+    // Существующие инициализации...
+
+    // Проверяем наличие элементов аккордеона
+    const accordionHeaders = document.querySelectorAll('.accordion-header');
+    if (accordionHeaders.length > 0) {
+        console.log('Аккордеон инициализирован, найдено заголовков:', accordionHeaders.length);
+    }
+});

@@ -756,6 +756,88 @@ a {
         text-decoration: underline;
     }
 
+/* Стили для секции FAQ (аккордеон) */
+.faq-section {
+    margin-top: 3rem;
+    width: 100%;
+}
+
+.faq-section-title {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.accordion {
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.accordion-item {
+    border: 1px solid #e0e0e0;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.accordion-header {
+    background-color: #f8f9fa;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+    .accordion-header:hover {
+        background-color: #e9ecef;
+    }
+
+    .accordion-header h3 {
+        font-size: 1.1rem;
+        color: #333;
+        margin: 0;
+        font-weight: 600;
+    }
+
+.accordion-icon {
+    font-size: 1.5rem;
+    color: #007bff;
+    transition: transform 0.3s ease;
+}
+
+.accordion-content {
+    padding: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+    background-color: #fff;
+}
+
+    .accordion-content p {
+        margin: 0;
+        color: #666;
+        line-height: 1.6;
+    }
+
+.accordion-item.active .accordion-header {
+    background-color: #e9ecef;
+}
+
+.accordion-item.active .accordion-icon {
+    transform: rotate(45deg);
+}
+
+.accordion-item.active .accordion-content {
+    max-height: 500px; /* Достаточно большое значение для любого содержимого */
+    padding: 15px 20px;
+    border-top: 1px solid #e0e0e0;
+}
+
 @media (max-width: 768px) {
     .top-section {
         flex-direction: column;
@@ -811,5 +893,18 @@ a {
     .score-info:hover::before {
         left: 10px;
         transform: none;
+    }
+
+    /* Адаптивные стили для аккордеона на мобильных устройствах */
+    .accordion-header {
+        padding: 12px 15px;
+    }
+
+        .accordion-header h3 {
+            font-size: 1rem;
+        }
+
+    .accordion-item.active .accordion-content {
+        padding: 12px 15px;
     }
 }
