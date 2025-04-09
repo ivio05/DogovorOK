@@ -1,4 +1,98 @@
-// Функция для выбора правильного метода расчета в зависимости от состояния чекбокса
+// Инициализация при загрузке страницы
+document.addEventListener('DOMContentLoaded', function () {
+    // Инициализация модального окна
+    addModalToDOM();
+
+    // Расчеты при загрузке страницы
+    calculatePaybackPeriod();
+    calculateROI();
+    calculateOCF();
+
+    // Добавляем обработчики для областей с результатами калькуляторов
+    attachCalculatorResultListeners();
+
+    // Инициализация состояния ROI калькулятора
+    const isFirstYear = document.getElementById('roiFirstYear').checked;
+    if (isFirstYear) {
+        toggleRoiFirstYear(); // Установка правильного состояния при загрузке страницы
+    }
+
+    // Настройка сенсорного управления (свайпы)
+    const carousel = document.querySelector('.calculator-carousel');
+    let startX;
+    let isSwiping = false;
+
+    carousel.addEventListener('touchstart', function (e) {
+        startX = e.touches[0].clientX;
+        isSwiping = true;
+    });
+
+    carousel.addEventListener('touchmove', function (e) {
+        if (!isSwiping) return;
+        const currentX = e.touches[0].clientX;
+        const diff = startX - currentX;
+
+        // Предотвращаем скролл страницы при свайпе
+        if (Math.abs(diff) > 5) {
+            e.preventDefault();
+        }
+    }, { passive: false });
+
+    carousel.addEventListener('touchend', function (e) {
+        if (!isSwiping) return;
+        const endX = e.changedTouches[0].clientX;
+        const diff = startX - endX;
+
+        // Если свайп достаточно длинный
+        if (Math.abs(diff) > 50) {
+            if (diff > 0) {
+                // Свайп влево - следующий слайд
+                moveCarousel(1);
+            } else {
+                // Свайп вправо - предыдущий слайд
+                moveCarousel(-1);
+            }
+        }
+
+        isSwiping = false;
+    });
+
+    // Проверяем наличие элементов аккордеона
+    const accordionHeaders = document.querySelectorAll('.accordion-header');
+    if (accordionHeaders.length > 0) {
+        console.log('Аккордеон инициализирован, найдено заголовков:', accordionHeaders.length);
+    }
+});// Переменные для карусели
+let currentSlide = 0;
+const totalSlides = 3; // Было 4, теперь 3, так как объединили два калькулятора ROI
+
+// Функция для обновления отображения карусели
+function updateCarousel() {
+    const track = document.getElementById('calculatorCarousel');
+    track.style.transform = `translateX(-${currentSlide * 100}%)`;
+
+    // Обновление индикаторов
+    const indicators = document.querySelectorAll('.indicator');
+    indicators.forEach((indicator, index) => {
+        if (index === currentSlide) {
+            indicator.classList.add('active');
+        } else {
+            indicator.classList.remove('active');
+        }
+    });
+}
+
+// Функция для перемещения карусели
+function moveCarousel(direction) {
+    currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+    updateCarousel();
+}
+
+// Функция для показа конкретного слайда
+function showSlide(slideIndex) {
+    currentSlide = slideIndex;
+    updateCarousel();
+}// Функция для выбора правильного метода расчета в зависимости от состояния чекбокса
 function recalculateROIBasedOnCheckbox() {
     const isFirstYear = document.getElementById('roiFirstYear').checked;
 
@@ -524,7 +618,6 @@ function calculateROIFirstYear() {
     });
 }
 
-// Функция для расчета OCF (Денежный поток от операционной деятельности)
 function calculateOCF() {
     const ebit = parseFloat(document.getElementById('ocfEBIT').value);
     const depreciation = parseFloat(document.getElementById('ocfDepreciation').value);
@@ -536,6 +629,76 @@ function calculateOCF() {
     document.getElementById('ocfResult').textContent = ocf.toLocaleString('ru-RU', {
         maximumFractionDigits: 2,
         minimumFractionDigits: 2
+    });
+}
+
+function calculatePaybackPeriod() {
+    const investment = parseFloat(document.getElementById('poInvestment').value);
+    const franchiseFee = parseFloat(document.getElementById('poFranchiseFee').value);
+    const royalty = parseFloat(document.getElementById('poRoyalty').value);
+    const monthlyProfit = parseFloat(document.getElementById('poMonthlyProfit').value);
+
+    // Срок окупаемости = размер вложений (все планируемые затраты+паушальный взнос+роялти) / планируемая прибыль (за месяц)
+    const totalInvestment = investment + franchiseFee + royalty;
+    const paybackPeriod = totalInvestment / monthlyProfit;
+
+    document.getElementById('poResult').textContent = paybackPeriod.toLocaleString('ru-RU', {
+        maximumFractionDigits: 1,
+        minimumFractionDigits: 1
+    });
+}
+
+// Функция для открытия модального окна с информацией о калькуляторе
+function openCalculatorModal(calculator) {
+    const modal = document.getElementById('economicModal') || addModalToDOM();
+    const modalTitle = document.getElementById('modalTitle');
+    const modalContent = document.getElementById('modalContent');
+
+    // Устанавливаем заголовок и содержимое в зависимости от типа калькулятора
+    if (calculator === 'payback') {
+        modalTitle.textContent = 'Срок окупаемости';
+        modalContent.innerHTML = `
+            <p>Это время, за которое вы вернёте вложенные деньги.</p>
+            <p> Например, если вы вложили 1 млн и вернули их за 2 года — срок окупаемости 2 года.</p>
+        `;
+    } else if (calculator === 'roi') {
+        modalTitle.textContent = 'Рентабельность инвестиций (ROI)';
+        modalContent.innerHTML = `
+            <p>Это общий показатель, насколько прибыльным был ваш бизнес по сравнению с вложениями.</p>
+            <p>Показывает, насколько эффективно вы используете деньги, чтобы зарабатывать.</p>
+        `;
+    } else if (calculator === 'ocf') {
+        modalTitle.textContent = 'Денежный поток (OCF)';
+        modalContent.innerHTML = `
+            <p>Это реальные деньги, которые остались у вас после всех операционных расходов (например, после оплаты аренды, зарплат, товаров и т.п.). Он показывает, сколько вы действительно зарабатываете на бизнесе.</p>
+        `;
+    }
+
+    // Отображаем модальное окно
+    modal.style.display = "block";
+}
+
+// Добавляем обработчики для результатов калькуляторов
+function attachCalculatorResultListeners() {
+    // Для калькулятора срока окупаемости
+    const poResult = document.querySelector('#poResult').parentElement.parentElement;
+    poResult.style.cursor = 'pointer';
+    poResult.addEventListener('click', function () {
+        openCalculatorModal('payback');
+    });
+
+    // Для калькулятора ROI
+    const roiResult = document.querySelector('#roiResult').parentElement.parentElement;
+    roiResult.style.cursor = 'pointer';
+    roiResult.addEventListener('click', function () {
+        openCalculatorModal('roi');
+    });
+
+    // Для калькулятора OCF
+    const ocfResult = document.querySelector('#ocfResult').parentElement.parentElement;
+    ocfResult.style.cursor = 'pointer';
+    ocfResult.addEventListener('click', function () {
+        openCalculatorModal('ocf');
     });
 }
 
@@ -559,157 +722,3 @@ function toggleAccordion(header) {
     // Открываем текущий элемент
     item.classList.add('active');
 }
-
-// Переменные для карусели
-let currentSlide = 0;
-const totalSlides = 3; // Было 4, теперь 3, так как объединили два калькулятора ROI
-
-// Функция для обновления отображения карусели
-function updateCarousel() {
-    const track = document.getElementById('calculatorCarousel');
-    track.style.transform = `translateX(-${currentSlide * 100}%)`;
-
-    // Обновление индикаторов
-    const indicators = document.querySelectorAll('.indicator');
-    indicators.forEach((indicator, index) => {
-        if (index === currentSlide) {
-            indicator.classList.add('active');
-        } else {
-            indicator.classList.remove('active');
-        }
-    });
-}
-
-// Функция для перемещения карусели
-function moveCarousel(direction) {
-    currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
-    updateCarousel();
-}
-
-// Функция для показа конкретного слайда
-function showSlide(slideIndex) {
-    currentSlide = slideIndex;
-    updateCarousel();
-}
-
-function calculatePaybackPeriod() {
-    const investment = parseFloat(document.getElementById('poInvestment').value);
-    const franchiseFee = parseFloat(document.getElementById('poFranchiseFee').value);
-    const royalty = parseFloat(document.getElementById('poRoyalty').value);
-    const monthlyProfit = parseFloat(document.getElementById('poMonthlyProfit').value);
-
-    // Срок окупаемости = размер вложений (все планируемые затраты+паушальный взнос+роялти) / планируемая прибыль (за месяц)
-    const totalInvestment = investment + franchiseFee + royalty;
-    const paybackPeriod = totalInvestment / monthlyProfit;
-
-    document.getElementById('poResult').textContent = paybackPeriod.toLocaleString('ru-RU', {
-        maximumFractionDigits: 1,
-        minimumFractionDigits: 1
-    });
-}
-
-// Обычная функция для расчета ROI
-function calculateROI() {
-    const income = parseFloat(document.getElementById('roiIncome').value);
-    const investment = parseFloat(document.getElementById('roiInvestment').value);
-
-    // Обычный расчет ROI: (Доход от вложений – Вложения) / Вложения * 100%
-    const roi = ((income - investment) / investment) * 100;
-
-    document.getElementById('roiResult').textContent = roi.toLocaleString('ru-RU', {
-        maximumFractionDigits: 2,
-        minimumFractionDigits: 2
-    });
-}
-
-// Специальная функция для расчета ROI за первый год
-function calculateROIFirstYear() {
-    const income = parseFloat(document.getElementById('roiIncome').value);
-    const investment = parseFloat(document.getElementById('roiInvestment').value);
-    const franchiseFee = parseFloat(document.getElementById('roiFranchiseFee').value) || 0;
-
-    // Расчет ROI за первый год: (Доход от вложений – Вложения + паушальный взнос) / Вложения * 100%
-    const roi = ((income - investment - franchiseFee) / investment) * 100;
-
-    document.getElementById('roiResult').textContent = roi.toLocaleString('ru-RU', {
-        maximumFractionDigits: 2,
-        minimumFractionDigits: 2
-    });
-}
-
-function calculateOCF() {
-    const ebit = parseFloat(document.getElementById('ocfEBIT').value);
-    const depreciation = parseFloat(document.getElementById('ocfDepreciation').value);
-    const taxes = parseFloat(document.getElementById('ocfTaxes').value);
-
-    // OCF = EBIT + Амортизация − Налоги
-    const ocf = ebit + depreciation - taxes;
-
-    document.getElementById('ocfResult').textContent = ocf.toLocaleString('ru-RU', {
-        maximumFractionDigits: 2,
-        minimumFractionDigits: 2
-    });
-}
-
-// Инициализация при загрузке страницы
-document.addEventListener('DOMContentLoaded', function () {
-    // Инициализация модального окна
-    addModalToDOM();
-
-    // Расчеты при загрузке страницы
-    calculatePaybackPeriod();
-    calculateROI();
-    calculateOCF();
-
-    // Инициализация состояния ROI калькулятора
-    const isFirstYear = document.getElementById('roiFirstYear').checked;
-    if (isFirstYear) {
-        toggleRoiFirstYear(); // Установка правильного состояния при загрузке страницы
-    }
-
-    // Настройка сенсорного управления (свайпы)
-    const carousel = document.querySelector('.calculator-carousel');
-    let startX;
-    let isSwiping = false;
-
-    carousel.addEventListener('touchstart', function (e) {
-        startX = e.touches[0].clientX;
-        isSwiping = true;
-    });
-
-    carousel.addEventListener('touchmove', function (e) {
-        if (!isSwiping) return;
-        const currentX = e.touches[0].clientX;
-        const diff = startX - currentX;
-
-        // Предотвращаем скролл страницы при свайпе
-        if (Math.abs(diff) > 5) {
-            e.preventDefault();
-        }
-    }, { passive: false });
-
-    carousel.addEventListener('touchend', function (e) {
-        if (!isSwiping) return;
-        const endX = e.changedTouches[0].clientX;
-        const diff = startX - endX;
-
-        // Если свайп достаточно длинный
-        if (Math.abs(diff) > 50) {
-            if (diff > 0) {
-                // Свайп влево - следующий слайд
-                moveCarousel(1);
-            } else {
-                // Свайп вправо - предыдущий слайд
-                moveCarousel(-1);
-            }
-        }
-
-        isSwiping = false;
-    });
-
-    // Проверяем наличие элементов аккордеона
-    const accordionHeaders = document.querySelectorAll('.accordion-header');
-    if (accordionHeaders.length > 0) {
-        console.log('Аккордеон инициализирован, найдено заголовков:', accordionHeaders.length);
-    }
-});
