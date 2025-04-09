@@ -1001,3 +1001,29 @@ a {
 .factor-item {
     padding: 0.75rem 0.5rem;
 }
+
+/* 
+Исправления положения элементов в экономической экспертизе:
+- Сдвигают кнопки "Узнать" правее
+- Смещают заголовок "Подробнее" левее
+*/
+
+/* Исправление положения элементов в экономической экспертизе */
+.analysis-column:last-child .factors-header span:last-child {
+    padding-right: 15px; /* Смещаем заголовок "Подробнее" левее */
+}
+
+/* Смещаем кнопки "Узнать" правее */
+.analysis-column:last-child .factor-item a {
+    margin-left: 70px;
+}
+
+/* Увеличиваем отступ слева для колонки с кнопками */
+.analysis-column:last-child .factor-item span:last-of-type {
+    padding-left: 15px;
+}
+
+/* Улучшаем выравнивание текста в результате */
+.analysis-column:last-child .factor-item span:nth-child(2) {
+    text-align: center;
+}

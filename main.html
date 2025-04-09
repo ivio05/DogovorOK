@@ -5,6 +5,86 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ДоговорОК</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Стили для модального окна */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            animation: fadeIn 0.3s;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            width: 50%;
+            max-width: 500px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            position: relative;
+            animation: slideIn 0.4s;
+        }
+
+        .close-modal {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            right: 20px;
+            top: 10px;
+        }
+
+            .close-modal:hover,
+            .close-modal:focus {
+                color: black;
+                text-decoration: none;
+            }
+
+        #modalTitle {
+            margin-top: 0;
+            color: #333;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        #modalContent {
+            margin-top: 15px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0
+            }
+
+            to {
+                opacity: 1
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -190,7 +270,7 @@
                     <div class="factors-container">
                         <div class="factors-header">
                             <span>Фактор</span>
-                            <span>Ссылка</span>
+                            <span>Подробнее</span>
                         </div>
                         <div class="factors-list" id="legalFactors">
                             <!-- Здесь будут добавляться юридические факторы через JavaScript -->
@@ -208,7 +288,7 @@
                         <div class="factors-header">
                             <span>Фактор</span>
                             <span>Результат</span>
-                            <span>Ссылка</span>
+                            <span>Подробнее</span>
                         </div>
                         <div class="factors-list" id="economicFactors">
                             <!-- Здесь будут добавляться экономические факторы через JavaScript -->
@@ -325,153 +405,5 @@
     </div>
 
     <script src="script.js"></script>
-    <script>
-        // Функция для расчета Срока окупаемости
-        function calculatePaybackPeriod() {
-            const investment = parseFloat(document.getElementById('poInvestment').value);
-            const franchiseFee = parseFloat(document.getElementById('poFranchiseFee').value);
-            const royalty = parseFloat(document.getElementById('poRoyalty').value);
-            const monthlyProfit = parseFloat(document.getElementById('poMonthlyProfit').value);
-
-            // Срок окупаемости = размер вложений (все планируемые затраты+паушальный взнос+роялти) / планируемая прибыль (за месяц)
-            const totalInvestment = investment + franchiseFee + royalty;
-            const paybackPeriod = totalInvestment / monthlyProfit;
-
-            document.getElementById('poResult').textContent = paybackPeriod.toLocaleString('ru-RU', {
-                maximumFractionDigits: 1,
-                minimumFractionDigits: 1
-            });
-        }
-
-        // Функция для расчета ROI за первый год
-        function calculateFirstYearROI() {
-            const income = parseFloat(document.getElementById('roiFirstYearIncome').value);
-            const investment = parseFloat(document.getElementById('roiFirstYearInvestment').value);
-            const franchiseFee = parseFloat(document.getElementById('roiFirstYearFranchiseFee').value);
-
-            // ROI = (Доход от вложений – Вложения + паушальный взнос) / Вложения * 100%
-            const roi = ((income - investment + franchiseFee) / investment) * 100;
-
-            document.getElementById('roiFirstYearResult').textContent = roi.toLocaleString('ru-RU', {
-                maximumFractionDigits: 2,
-                minimumFractionDigits: 2
-            });
-        }
-
-        // Функция для расчета ROI (Рентабельность инвестиций)
-        function calculateROI() {
-            const income = parseFloat(document.getElementById('roiIncome').value);
-            const investment = parseFloat(document.getElementById('roiInvestment').value);
-
-            // ROI = (Доход от вложений – Вложения) / Вложения * 100%
-            const roi = ((income - investment) / investment) * 100;
-
-            document.getElementById('roiResult').textContent = roi.toLocaleString('ru-RU', {
-                maximumFractionDigits: 2,
-                minimumFractionDigits: 2
-            });
-        }
-
-        // Функция для расчета OCF (Денежный поток от операционной деятельности)
-        function calculateOCF() {
-            const ebit = parseFloat(document.getElementById('ocfEBIT').value);
-            const depreciation = parseFloat(document.getElementById('ocfDepreciation').value);
-            const taxes = parseFloat(document.getElementById('ocfTaxes').value);
-
-            // OCF = EBIT + Амортизация − Налоги
-            const ocf = ebit + depreciation - taxes;
-
-            document.getElementById('ocfResult').textContent = ocf.toLocaleString('ru-RU', {
-                maximumFractionDigits: 2,
-                minimumFractionDigits: 2
-            });
-        }
-
-        // Переменные для карусели
-        let currentSlide = 0;
-        const totalSlides = 3; // Было 4, теперь 3, так как объединили два калькулятора ROI
-
-        // Функция для обновления отображения карусели
-        function updateCarousel() {
-            const track = document.getElementById('calculatorCarousel');
-            track.style.transform = `translateX(-${currentSlide * 100}%)`;
-
-            // Обновление индикаторов
-            const indicators = document.querySelectorAll('.indicator');
-            indicators.forEach((indicator, index) => {
-                if (index === currentSlide) {
-                    indicator.classList.add('active');
-                } else {
-                    indicator.classList.remove('active');
-                }
-            });
-        }
-
-        // Функция для перемещения карусели
-        function moveCarousel(direction) {
-            currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
-            updateCarousel();
-        }
-
-        // Функция для показа конкретного слайда
-        function showSlide(slideIndex) {
-            currentSlide = slideIndex;
-            updateCarousel();
-        }
-
-        // Функция для поддержки свайпов на мобильных устройствах
-        document.addEventListener('DOMContentLoaded', function () {
-            // Расчеты при загрузке страницы
-            calculatePaybackPeriod();
-            calculateROI();
-            calculateOCF();
-
-            // Инициализация состояния ROI калькулятора
-            const isFirstYear = document.getElementById('roiFirstYear').checked;
-            if (isFirstYear) {
-                toggleRoiFirstYear(); // Установка правильного состояния при загрузке страницы
-            }
-
-            // Настройка сенсорного управления (свайпы)
-            const carousel = document.querySelector('.calculator-carousel');
-            let startX;
-            let isSwiping = false;
-
-            carousel.addEventListener('touchstart', function (e) {
-                startX = e.touches[0].clientX;
-                isSwiping = true;
-            });
-
-            carousel.addEventListener('touchmove', function (e) {
-                if (!isSwiping) return;
-                const currentX = e.touches[0].clientX;
-                const diff = startX - currentX;
-
-                // Предотвращаем скролл страницы при свайпе
-                if (Math.abs(diff) > 5) {
-                    e.preventDefault();
-                }
-            }, { passive: false });
-
-            carousel.addEventListener('touchend', function (e) {
-                if (!isSwiping) return;
-                const endX = e.changedTouches[0].clientX;
-                const diff = startX - endX;
-
-                // Если свайп достаточно длинный
-                if (Math.abs(diff) > 50) {
-                    if (diff > 0) {
-                        // Свайп влево - следующий слайд
-                        moveCarousel(1);
-                    } else {
-                        // Свайп вправо - предыдущий слайд
-                        moveCarousel(-1);
-                    }
-                }
-
-                isSwiping = false;
-            });
-        });
-    </script>
 </body>
 </html>
