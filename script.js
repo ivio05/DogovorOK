@@ -81,22 +81,39 @@ function isValidFileType(file) {
     return fileName.endsWith('.pdf') || fileName.endsWith('.docx');
 }
 
-// Функция-заглушка для проверки файла на корректность
+// Функция-заглушка для проверки файла на корректность - убрана задержка
 function checkFileValidity(file) {
     return new Promise((resolve) => {
         resultDiv.innerHTML = 'Проверка файла на корректность...';
-        // Имитация длительной проверки
-        setTimeout(() => {
-            uploadArea.style.backgroundColor = '#CCFFCC';
-            resolve(true); // Всегда возвращаем успешный результат
-        }, 2000);
+        // Убираем задержку, выполняем мгновенно
+        uploadArea.style.backgroundColor = '#CCFFCC';
+        resolve(true); // Всегда возвращаем успешный результат
     });
 }
 
-// Функция для отображения случайной оценки и применения соответствующего цвета
+// Функция для отображения оценки в виде изображения
 function displayScore(element, score) {
-    element.textContent = score;
-    element.className = 'score score-' + score + ' score-info';
+    // Очищаем текущее содержимое
+    element.innerHTML = '';
+
+    // Определяем имя файла изображения в зависимости от оценки
+    let imageSrc = '';
+    if (score === 1) {
+        imageSrc = './images/rating1.png';
+    } else if (score === 2) {
+        imageSrc = './images/rating2.png';
+    } else if (score === 3) {
+        imageSrc = './images/rating3.png';
+    }
+
+    // Создаем изображение
+    const img = document.createElement('img');
+    img.src = imageSrc;
+    img.alt = 'Оценка ' + score;
+
+    // Добавляем изображение в контейнер
+    element.appendChild(img);
+    element.className = 'score score-info';
 }
 
 // Функция для создания строки с экономическим фактором
@@ -165,10 +182,6 @@ function createLegalFactorElement(question, value) {
     factorStatement.textContent = statement;
     factorElement.appendChild(factorStatement);
 
-    // Добавляем пустой элемент в колонку "Результат"
-    const emptyElement = document.createElement('span');
-    factorElement.appendChild(emptyElement);
-
     // Добавляем ссылку или дропдаун с множественными ссылками в колонку "Ссылка"
     if (multipleLinks) {
         const linkContainer = document.createElement('div');
@@ -217,11 +230,8 @@ function populateEconomicFactors(container, factors) {
 function populateLegalFactors(container, factors) {
     container.innerHTML = '';
 
-    // Обновляем заголовок для юридической таблицы
-    const legalHeaderContainer = container.closest('.analysis-column').querySelector('.factors-header');
-    if (legalHeaderContainer) {
-        legalHeaderContainer.innerHTML = '<span>Фактор</span><span style="display:none;"></span><span style="text-align:center;">Ссылка</span>';
-    }
+    // Обновляем заголовок для юридической таблицы - теперь уже не нужно
+    // так как структура сделана правильно в HTML
 
     for (const [question, value] of Object.entries(factors)) {
         container.appendChild(createLegalFactorElement(question, value));
@@ -246,7 +256,7 @@ function populateLegalFactors(container, factors) {
     });
 }
 
-// Функция-заглушка для анализа файла
+// Функция-заглушка для анализа файла - убрана задержка
 function analyzeFile(file) {
     return new Promise((resolve) => {
         resultDiv.innerHTML = 'Анализ файла...';
@@ -274,28 +284,30 @@ function analyzeFile(file) {
             'Является ли Правообладатель юридическим лицом?': analysisData['Является ли Правообладатель юридическим лицом?']
         };
 
-        // Имитация длительного анализа
-        setTimeout(() => {
-            const economicScore = 1;
-            const legalScore = 1;
+        // Убираем задержку, выполняем мгновенно
+        const economicScore = 1;
+        const legalScore = 1;
 
-            //Math.floor(Math.random() * 3) + 
+        //Math.floor(Math.random() * 3) + 
 
-            displayScore(economicScoreDiv, economicScore);
-            displayScore(legalScoreDiv, legalScore);
+        // Отображаем данные в нужных колонках согласно их заголовкам
+        // Первая колонка - юридические данные, вторая - экономические данные
+        displayScore(legalScoreDiv, legalScore);
+        displayScore(economicScoreDiv, economicScore);
 
-            populateEconomicFactors(economicFactorsDiv, economicFactors);
-            populateLegalFactors(legalFactorsDiv, legalFactors);
+        // Поменяли местами вызовы функций, чтобы таблицы соответствовали заголовкам
+        // Теперь для legalFactorsDiv используем legalFactors, а для economicFactorsDiv - economicFactors
+        populateLegalFactors(legalFactorsDiv, legalFactors);
+        populateEconomicFactors(economicFactorsDiv, economicFactors);
 
-            analysisResultsDiv.style.display = 'block';
+        analysisResultsDiv.style.display = 'block';
 
-            resolve({
-                success: true,
-                message: 'Файл успешно проанализирован',
-                economicScore: economicScore,
-                legalScore: legalScore
-            });
-        }, 3000);
+        resolve({
+            success: true,
+            message: 'Файл успешно проанализирован',
+            economicScore: economicScore,
+            legalScore: legalScore
+        });
     });
 }
 
@@ -331,6 +343,20 @@ function handleFile(file) {
         })
         .then(result => {
             resultDiv.innerHTML = '';
+
+            // Меняем заголовки колонок - должны быть уже правильно установлены в HTML
+            // Первая колонка (слева) будет юридической, вторая (справа) - экономической
+            const analysisColumns = document.querySelectorAll('.analysis-column');
+            if (analysisColumns.length === 2) {
+                // Убедимся, что у нас корректные заголовки
+                const firstHeader = analysisColumns[0].querySelector('h3');
+                const secondHeader = analysisColumns[1].querySelector('h3');
+
+                if (firstHeader && secondHeader) {
+                    firstHeader.textContent = 'Юридическая экспертиза';
+                    secondHeader.textContent = 'Экономическая экспертиза';
+                }
+            }
 
             analysisTitleDiv.textContent = `Анализ файла "${currentFileName}"`;
             analysisTitleDiv.style.display = 'block';

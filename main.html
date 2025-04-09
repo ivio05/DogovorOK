@@ -11,8 +11,11 @@
     <!-- Плашка с названием сайта -->
     <div class="site-header">
         <div class="header-content">
-            <h1>ДоговорОК</h1>
-            <p>Ваш надежный помощник в работе с документами</p>
+            <img src="./images/logo.png" alt="ДоговорОК логотип" class="site-logo">
+            <div class="site-title">
+                <h1>ДоговорОК</h1>
+                <p>Ваш надежный помощник в работе с документами</p>
+            </div>
         </div>
     </div>
 
@@ -32,11 +35,12 @@
 
             <!-- Список справа -->
             <div class="sidebar">
-                <h2>Что мы проверяем?</h2>
+                <h2>Что мы проверяем в договоре</h2>
                 <ul>
-                    <li>Условия Вашего договора с рыночными – проверяем соответствие стандартам франчайзинга.</li>
-                    <li>Экономическую выгоду – проверяем наличие скрытых платежей или завышенных роялти.</li>
-                    <li>Юридическую чистоту – проверяем обоснованность представленных условий.</li>
+                    <li>
+                        Экономическую выгоду
+                    </li>
+                    <li>Юридическую чистоту</li>
                 </ul>
             </div>
         </div>
@@ -177,11 +181,28 @@
         <!-- Область результатов анализа (будет скрыта до завершения анализа) -->
         <div class="analysis-results" id="analysisResults" style="display: none;">
             <div class="analysis-columns">
+                <!-- Колонка с юридической экспертизой -->
+                <div class="analysis-column">
+                    <h3>Юридическая экспертиза</h3>
+                    <div class="score-container">
+                        <div class="score score-info" id="legalScore" data-tooltip="1 — высокие риски, 2 — умеренные риски, 3 — низкие риски"></div>
+                    </div>
+                    <div class="factors-container">
+                        <div class="factors-header">
+                            <span>Фактор</span>
+                            <span>Ссылка</span>
+                        </div>
+                        <div class="factors-list" id="legalFactors">
+                            <!-- Здесь будут добавляться юридические факторы через JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Колонка с экономической экспертизой -->
                 <div class="analysis-column">
                     <h3>Экономическая экспертиза</h3>
                     <div class="score-container">
-                        <div class="score score-info" id="economicScore" data-tooltip="1 — высокие риски, 2 — умеренные риски, 3 — низкие риски">2</div>
+                        <div class="score score-info" id="economicScore" data-tooltip="1 — высокие риски, 2 — умеренные риски, 3 — низкие риски"></div>
                     </div>
                     <div class="factors-container">
                         <div class="factors-header">
@@ -190,25 +211,7 @@
                             <span>Ссылка</span>
                         </div>
                         <div class="factors-list" id="economicFactors">
-                            <!-- Здесь будут добавляться факторы через JavaScript -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Колонка с юридической экспертизой -->
-                <div class="analysis-column">
-                    <h3>Юридическая экспертиза</h3>
-                    <div class="score-container">
-                        <div class="score score-info" id="legalScore" data-tooltip="1 — высокие риски, 2 — умеренные риски, 3 — низкие риски">3</div>
-                    </div>
-                    <div class="factors-container">
-                        <div class="factors-header">
-                            <span>Фактор</span>
-                            <span>Результат</span>
-                            <span>Ссылка</span>
-                        </div>
-                        <div class="factors-list" id="legalFactors">
-                            <!-- Здесь будут добавляться факторы через JavaScript -->
+                            <!-- Здесь будут добавляться экономические факторы через JavaScript -->
                         </div>
                     </div>
                 </div>
