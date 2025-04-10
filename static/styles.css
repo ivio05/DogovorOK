@@ -1,0 +1,1003 @@
+/* Стили для оценок с подсказками */
+.score-info:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: 250px;
+    max-width: 350px;
+    background-color: #333;
+    color: white;
+    text-align: center;
+    border-radius: 6px;
+    padding: 10px;
+    z-index: 100;
+    font-size: 0.9rem;
+    font-weight: normal;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+    margin-top: 10px;
+    line-height: 1.4;
+}
+
+.score-info:hover::before {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent #333 transparent;
+    margin-top: 0px;
+    z-index: 101;
+}
+/* Сброс стилей */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Основные стили */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 0;
+}
+
+/* Плашка с названием сайта */
+.site-header {
+    background-color: #000;
+    color: #fff;
+    width: 100%;
+    padding: 1rem 2rem;
+    text-align: left;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.site-logo {
+    max-height: 60px;
+    width: auto;
+}
+
+.site-title {
+    flex: 1;
+}
+
+.site-header h1 {
+    font-size: 2rem;
+    margin: 0;
+}
+
+.site-header p {
+    font-size: 1rem;
+    margin: 0.5rem 0 0;
+    color: #e0e0e0; /* Светло-серый текст */
+}
+
+/* Основной контейнер */
+.main-container {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    max-width: 1200px;
+    margin: 2rem 0 1rem; /* Отступы сверху и снизу */
+    padding: 2rem;
+}
+
+/* Верхняя часть: заголовок и список */
+.top-section {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+/* Основной контейнер */
+.container {
+    flex: 2;
+}
+
+header {
+    margin-bottom: 2rem;
+}
+
+    header h2 {
+        font-size: 2rem;
+        color: #333;
+        margin-bottom: 1rem;
+    }
+
+    header p {
+        font-size: 1.2rem;
+        color: #666;
+    }
+
+/* Список справа */
+.sidebar {
+    flex: 1;
+}
+
+    .sidebar h2 {
+        font-size: 1.5rem;
+        color: #333;
+        margin-bottom: 1rem;
+    }
+
+    .sidebar ul {
+        list-style-type: none;
+    }
+
+        .sidebar ul li {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+/* Секция с двумя колонками */
+.upload-info-section {
+    display: flex;
+    margin-bottom: 2rem;
+    max-height: 400px; /* Максимальная высота для обеих секций */
+    width: 100%; /* Обеспечиваем полную ширину контейнера */
+    justify-content: space-between; /* Распределяем пространство равномерно */
+}
+
+/* Общие стили для обеих колонок */
+.column {
+    width: 50%; /* Явно устанавливаем ширину каждой колонки в 50% */
+    flex: none; /* Отключаем flex-grow и flex-shrink */
+    display: flex;
+    flex-direction: column;
+    max-height: 400px; /* Контроль максимальной высоты */
+}
+
+/* Левая колонка - область загрузки */
+.upload-column {
+    flex: 0.5;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+}
+
+    .upload-column h2 {
+        font-size: 1.3rem;
+        color: #333;
+        margin-bottom: 0.8rem;
+        text-align: center;
+        border-bottom: 1px solid #e9ecef;
+        padding-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+.document-upload-carousel {
+    position: relative;
+    flex-grow: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.upload-area-container {
+    min-width: 100%;
+    background-color: white;
+    border-radius: 8px;
+    padding: 0.8rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    height: calc(100% - 20px);
+    overflow-y: auto;
+}
+
+/* Контейнер для области загрузки */
+.upload-area-container {
+    min-width: 100%;
+    background-color: white;
+    border-radius: 8px 8px 0 0; /* Закругление только сверху */
+    padding: 0.8rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+/* Сама область загрузки */
+.upload-area {
+    border: 2px dashed #007bff;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    flex-grow: 1; /* Занимает все доступное пространство */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-color: white;
+    margin: 0; /* Убираем все отступы */
+    height: 100%; /* Принудительно задаем высоту 100% */
+}
+
+    .upload-area p {
+        font-size: 1.2rem;
+        color: #007bff;
+        margin: 0;
+    }
+
+/* Область результата - внизу области загрузки */
+.result-area {
+    margin-top: 10px;
+    font-size: 1rem;
+    color: #333;
+    text-align: center;
+    padding: 5px;
+    background-color: white;
+    border-radius: 0 0 8px 8px;
+    min-height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.upload-area:hover {
+    background-color: #f0f8ff;
+}
+
+/* Правая колонка - калькуляторы */
+.calc-column {
+    flex: 0.5; /* Уменьшаем до 50% от flex-контейнера */
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+}
+
+    .calc-column h2 {
+        font-size: 1.3rem;
+        color: #333;
+        margin-bottom: 0.8rem;
+        text-align: center;
+        border-bottom: 1px solid #e9ecef;
+        padding-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+/* Карусель калькуляторов */
+.calculator-carousel {
+    position: relative;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.carousel-track {
+    display: flex;
+    transition: transform 0.5s ease-out;
+    height: 100%;
+}
+
+.calculator-block {
+    min-width: 100%;
+    background-color: white;
+    border-radius: 8px;
+    padding: 0.8rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    height: calc(100% - 20px); /* Оставляем место для индикаторов */
+    overflow-y: auto;
+}
+
+.slide {
+    box-sizing: border-box;
+}
+
+/* Кнопки карусели */
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 25px;
+    height: 25px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 0.8rem;
+    cursor: pointer;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
+}
+
+    .carousel-btn:hover {
+        background-color: rgba(0, 0, 0, 0.7);
+    }
+
+.prev-btn {
+    left: 5px;
+}
+
+.next-btn {
+    right: 5px;
+}
+
+/* Индикаторы страниц карусели */
+.carousel-indicators {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    position: absolute;
+    bottom: 5px;
+    left: 0;
+    right: 0;
+}
+
+.indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #ccc;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+    .indicator.active {
+        background-color: #007bff;
+    }
+
+/* Заголовки калькуляторов */
+.calculator-block h3 {
+    font-size: 1.1rem;
+    color: #333;
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Форма калькулятора */
+.calculator-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.form-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+    .form-row label {
+        flex: 2;
+        font-size: 0.85rem;
+        color: #555;
+    }
+
+.calc-input {
+    flex: 1;
+    padding: 0.4rem;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 0.85rem;
+}
+
+/* Стили для флажка (чекбокса) */
+.checkbox-row {
+    justify-content: flex-start;
+    margin-bottom: 0.5rem;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-weight: 600;
+    color: #333;
+}
+
+    .checkbox-label input[type="checkbox"] {
+        margin-right: 8px;
+    }
+
+.calc-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 0.4rem;
+}
+
+    .calc-btn:hover {
+        background-color: #0069d9;
+    }
+
+.result-field {
+    margin-top: 0.8rem;
+    background-color: #e9f7fe;
+    padding: 0.7rem;
+    border-radius: 4px;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Стили для информационных подсказок */
+.info-tooltip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.2em;
+    height: 1.2em;
+    border-radius: 50%;
+    background-color: #007bff;
+    color: white;
+    font-size: 0.9em;
+    font-weight: bold;
+    margin-left: 0.5rem;
+    cursor: help;
+    position: relative;
+}
+
+    .info-tooltip:hover::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        min-width: 200px;
+        max-width: 300px;
+        background-color: #333;
+        color: white;
+        text-align: center;
+        border-radius: 6px;
+        padding: 10px;
+        z-index: 100;
+        font-size: 0.85rem;
+        font-weight: normal;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+        margin-top: 10px;
+        line-height: 1.4;
+    }
+
+    .info-tooltip:hover::before {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: 5px;
+        border-style: solid;
+        border-color: transparent transparent #333 transparent;
+        margin-top: 0px;
+        z-index: 101;
+    }
+
+    /* Изменение позиции всплывающей подсказки для элементов внизу экрана */
+    .info-tooltip.tooltip-top:hover::after {
+        top: auto;
+        bottom: 100%;
+        margin-bottom: 10px;
+        margin-top: 0;
+    }
+
+    .info-tooltip.tooltip-top:hover::before {
+        top: auto;
+        bottom: 100%;
+        border-color: #333 transparent transparent transparent;
+        margin-bottom: 0px;
+    }
+
+.result-field p {
+    margin: 0;
+    color: #333;
+    font-size: 0.9rem;
+}
+
+/* Стили для блока результатов анализа */
+.analysis-results {
+    margin-top: 2rem;
+    width: 100%;
+}
+
+.analysis-columns {
+    display: flex;
+    gap: 2rem;
+    width: 100%;
+}
+
+.analysis-column {
+    flex: 1;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+    .analysis-column h3 {
+        font-size: 1.5rem;
+        color: #333;
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+
+/* Стили для оценок */
+.score-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+}
+
+.score {
+    width: 5rem;
+    height: 5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: help;
+    position: relative;
+}
+
+    .score img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+/* Стили для контейнера факторов */
+.factors-container {
+    width: 100%;
+}
+
+.factors-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr 80px;
+    gap: 1rem;
+    padding: 0.75rem;
+    font-weight: bold;
+    background-color: #e9ecef;
+    border-radius: 8px 8px 0 0;
+}
+
+.factors-list {
+    height: 300px; /* Высота области с прокруткой */
+    overflow-y: auto;
+    border: 1px solid #e9ecef;
+    border-radius: 0 0 8px 8px;
+}
+
+.factor-item {
+    display: grid;
+    grid-template-columns: 1fr 1fr 80px;
+    gap: 1rem;
+    padding: 0.75rem;
+    border-bottom: 1px solid #e9ecef;
+}
+
+    .factor-item:last-child {
+        border-bottom: none;
+    }
+
+    .factor-item a {
+        padding: 0.25rem 0.5rem;
+        background-color: #007bff;
+        color: white;
+        border-radius: 4px;
+        text-align: center;
+        text-decoration: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+    }
+
+        .factor-item a:hover {
+            background-color: #0069d9;
+            text-decoration: none;
+        }
+
+/* Специальные стили для юридической экспертизы */
+.analysis-column:nth-child(2) .factors-header {
+    display: grid;
+    grid-template-columns: 1fr 0fr 80px;
+}
+
+    .analysis-column:nth-child(2) .factors-header span:last-child {
+        text-align: center;
+        width: 80px;
+        justify-self: center;
+    }
+
+    .analysis-column:nth-child(2) .factors-header span:nth-child(2) {
+        display: none;
+    }
+
+.analysis-column:nth-child(2) .factor-item {
+    display: grid;
+    grid-template-columns: 1fr 0fr 80px;
+}
+
+    .analysis-column:nth-child(2) .factor-item span:first-child {
+        padding-right: 10px;
+        text-align: left;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+/* Стили для выпадающего меню с множественными ссылками */
+.link-dropdown {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height: 100%;
+}
+
+    .link-dropdown .main-link {
+        display: inline-block;
+        padding: 0.25rem 0.5rem;
+        background-color: #007bff;
+        color: white;
+        border-radius: 4px;
+        text-decoration: none;
+        width: 80px;
+        box-sizing: border-box;
+        text-align: center;
+    }
+
+        .link-dropdown .main-link:hover {
+            background-color: #0069d9;
+        }
+
+    .link-dropdown .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 150px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+        right: 0;
+        border-radius: 4px;
+        overflow: hidden;
+        top: 100%;
+    }
+
+        .link-dropdown .dropdown-content a {
+            color: black;
+            padding: 10px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+            font-size: 0.9rem;
+            width: 100%;
+            border-bottom: 1px solid #eee;
+            background-color: transparent;
+        }
+
+            .link-dropdown .dropdown-content a:last-child {
+                border-bottom: none;
+            }
+
+            .link-dropdown .dropdown-content a:hover {
+                background-color: #f1f1f1;
+            }
+
+    .link-dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+/* Стили для заголовка анализа файла */
+.analysis-title {
+    font-size: 1.8rem;
+    color: #333;
+    margin: 2rem 0 1rem;
+    text-align: center;
+}
+
+/* Стили для кнопок скачивания */
+.download-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 2rem;
+    gap: 1rem;
+}
+
+.download-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    width: 300px;
+    transition: background-color 0.3s;
+    position: relative;
+}
+
+    .download-btn:hover {
+        background-color: #0056b3;
+    }
+
+.info-tooltip.tooltip-top {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+/* Стили для секции FAQ (аккордеон) */
+.faq-section {
+    margin-top: 3rem;
+    width: 100%;
+}
+
+.faq-section-title {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.accordion {
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.accordion-item {
+    border: 1px solid #e0e0e0;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.accordion-header {
+    background-color: #f8f9fa;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+    .accordion-header:hover {
+        background-color: #e9ecef;
+    }
+
+    .accordion-header h3 {
+        font-size: 1.1rem;
+        color: #333;
+        margin: 0;
+        font-weight: 600;
+    }
+
+.accordion-icon {
+    font-size: 1.5rem;
+    color: #007bff;
+    transition: transform 0.3s ease;
+}
+
+.accordion-content {
+    padding: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+    background-color: #fff;
+}
+
+    .accordion-content p {
+        margin: 0;
+        color: #666;
+        line-height: 1.6;
+    }
+
+.accordion-item.active .accordion-header {
+    background-color: #e9ecef;
+}
+
+.accordion-item.active .accordion-icon {
+    transform: rotate(45deg);
+}
+
+.accordion-item.active .accordion-content {
+    max-height: 500px; /* Достаточно большое значение для любого содержимого */
+    padding: 15px 20px;
+    border-top: 1px solid #e0e0e0;
+}
+
+@media (max-width: 768px) {
+    .top-section {
+        flex-direction: column;
+    }
+
+    .upload-info-section {
+        flex-direction: column;
+        max-height: none;
+        gap: 1rem;
+    }
+
+    .column, .upload-column, .calc-column {
+        width: 100%;
+        max-height: none;
+        margin-bottom: 1rem;
+    }
+
+    .upload-area {
+        height: 200px;
+    }
+
+    .upload-container, .calculator-carousel {
+        max-height: 300px;
+    }
+
+    .analysis-columns {
+        flex-direction: column;
+    }
+
+    .download-btn {
+        width: 100%;
+    }
+
+    .document-upload-carousel {
+        max-height: 300px;
+    }
+
+    .upload-area {
+        height: 180px;
+    }
+
+    /* Адаптация подсказок для мобильных устройств */
+    .info-tooltip:hover::after,
+    .score-info:hover::after {
+        min-width: 150px;
+        max-width: 250px;
+        font-size: 0.8rem;
+        left: 0;
+        transform: none;
+    }
+
+    .info-tooltip:hover::before,
+    .score-info:hover::before {
+        left: 10px;
+        transform: none;
+    }
+
+    /* Адаптивные стили для аккордеона на мобильных устройствах */
+    .accordion-header {
+        padding: 12px 15px;
+    }
+
+        .accordion-header h3 {
+            font-size: 1rem;
+        }
+
+    .accordion-item.active .accordion-content {
+        padding: 12px 15px;
+    }
+}
+
+/* Стили для колонок анализа */
+.analysis-column:first-child .factors-header,
+.analysis-column:first-child .factor-item {
+    /* Для юридической экспертизы (первая колонка) */
+    grid-template-columns: 3fr 1fr !important;
+}
+
+.analysis-column:last-child .factors-header,
+.analysis-column:last-child .factor-item {
+    /* Для экономической экспертизы (вторая колонка) */
+    grid-template-columns: 1fr 1fr 1fr !important;
+}
+
+/* Отменяем скрытие заголовка "Результат" в экономической таблице */
+.analysis-column:nth-child(2) .factors-header span:nth-child(2) {
+    display: block !important;
+}
+
+/* Делаем видимыми все заголовки в экономической экспертизе */
+.analysis-column:last-child .factors-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr 80px !important;
+}
+
+    .analysis-column:last-child .factors-header span {
+        display: block !important;
+    }
+
+/* Унифицирован размер кнопок ссылок */
+.factor-item a,
+.link-dropdown .main-link {
+    width: 80px;
+    min-width: 80px;
+    max-width: 80px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.25rem 0;
+    margin: 0 auto;
+    text-align: center;
+}
+
+/* Фиксируем положение всех кнопок, включая первую */
+.link-dropdown {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+/* Центрирование заголовка "Ссылка" */
+.factors-header span:last-child {
+    text-align: center !important;
+}
+
+/* Для результатов в экономической экспертизе */
+.analysis-column:last-child .factor-item span:nth-child(2) {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+    padding-right: 10px;
+}
+
+/* Для фактора в юридической экспертизе */
+.analysis-column:first-child .factor-item span:first-child {
+    text-align: left;
+    padding-right: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Корректировка шапки колонок */
+.factors-header {
+    font-weight: bold;
+    text-align: left;
+}
+
+/* Общие улучшения таблиц */
+.factors-list {
+    border: 1px solid #e9ecef;
+    border-radius: 0 0 8px 8px;
+}
+
+.factor-item {
+    padding: 0.75rem 0.5rem;
+}
