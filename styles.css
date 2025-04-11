@@ -145,36 +145,38 @@ header {
             margin-bottom: 0.5rem;
         }
 
-/* Секция с двумя колонками */
+/* Секция с двумя колонками (теперь одна область на всю ширину) */
 .upload-info-section {
-    display: flex;
+    display: block;
     margin-bottom: 2rem;
-    max-height: 400px; /* Максимальная высота для обеих секций */
-    width: 100%; /* Обеспечиваем полную ширину контейнера */
-    justify-content: space-between; /* Распределяем пространство равномерно */
+    width: 100%;
 }
 
-/* Общие стили для обеих колонок */
-.column {
-    width: 50%; /* Явно устанавливаем ширину каждой колонки в 50% */
-    flex: none; /* Отключаем flex-grow и flex-shrink */
-    display: flex;
-    flex-direction: column;
-    max-height: 400px; /* Контроль максимальной высоты */
-}
-
-/* Левая колонка - область загрузки */
-.upload-column {
-    flex: 0.5;
+/* Блок загрузки на всю ширину */
+.upload-column.full-width {
+    width: 100%;
+    flex: none;
     background-color: #f8f9fa;
     border-radius: 8px;
     padding: 1rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     display: flex;
     flex-direction: column;
+    max-height: 400px; 
 }
 
-    .upload-column h2 {
+/* Секция с калькуляторами (новая секция) */
+.calc-section {
+    display: block;
+    margin-bottom: 2rem;
+    width: 100%;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+    .calc-section h2 {
         font-size: 1.3rem;
         color: #333;
         margin-bottom: 0.8rem;
@@ -185,6 +187,27 @@ header {
         align-items: center;
         justify-content: center;
     }
+
+/* Калькуляторы - теперь шире */
+.calculator-carousel {
+    position: relative;
+    max-height: 350px;
+    overflow: hidden;
+    margin: 0 auto;
+    max-width: 800px; /* Ограничиваем максимальную ширину для удобства */
+}
+
+.upload-column h2 {
+    font-size: 1.3rem;
+    color: #333;
+    margin-bottom: 0.8rem;
+    text-align: center;
+    border-bottom: 1px solid #e9ecef;
+    padding-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
 .document-upload-carousel {
     position: relative;
@@ -230,6 +253,7 @@ header {
     background-color: white;
     margin: 0; /* Убираем все отступы */
     height: 100%; /* Принудительно задаем высоту 100% */
+    min-height: 160px; /* Добавляем минимальную высоту */
 }
 
     .upload-area p {
@@ -255,36 +279,6 @@ header {
 
 .upload-area:hover {
     background-color: #f0f8ff;
-}
-
-/* Правая колонка - калькуляторы */
-.calc-column {
-    flex: 0.5; /* Уменьшаем до 50% от flex-контейнера */
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    padding: 1rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    display: flex;
-    flex-direction: column;
-}
-
-    .calc-column h2 {
-        font-size: 1.3rem;
-        color: #333;
-        margin-bottom: 0.8rem;
-        text-align: center;
-        border-bottom: 1px solid #e9ecef;
-        padding-bottom: 0.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-/* Карусель калькуляторов */
-.calculator-carousel {
-    position: relative;
-    flex-grow: 1;
-    overflow: hidden;
 }
 
 .carousel-track {
@@ -582,6 +576,38 @@ header {
         object-fit: contain;
     }
 
+/* Стили для индикатора загрузки */
+.loading-indicator {
+    text-align: center;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(0, 123, 255, 0.2);
+    border-radius: 50%;
+    border-top-color: #007bff;
+    animation: spin 1s ease-in-out infinite;
+    margin-bottom: 10px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.loading-indicator p {
+    color: #555;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
 /* Стили для контейнера факторов */
 .factors-container {
     width: 100%;
@@ -733,6 +759,38 @@ header {
     text-align: center;
 }
 
+    /* Стили для кликабельного заголовка анализа */
+    .analysis-title.toggleable {
+        cursor: pointer;
+        position: relative;
+        padding-left: 25px;
+        transition: color 0.3s ease;
+    }
+
+        .analysis-title.toggleable:hover {
+            color: #007bff;
+        }
+
+        .analysis-title.toggleable::before {
+            content: "▼";
+            position: absolute;
+            left: 0;
+            transition: transform 0.3s ease;
+        }
+
+        .analysis-title.toggleable.collapsed::before {
+            transform: rotate(-90deg);
+        }
+
+        .analysis-title.toggleable::after {
+            content: "(нажмите, чтобы скрыть/показать)";
+            font-size: 0.7em;
+            opacity: 0.7;
+            margin-left: 10px;
+            font-weight: normal;
+            display: inline-block;
+        }
+
 /* Стили для кнопок скачивания */
 .download-buttons {
     display: flex;
@@ -857,6 +915,7 @@ a {
     border-top: 1px solid #e0e0e0;
 }
 
+/* Адаптивные стили для мобильных устройств */
 @media (max-width: 768px) {
     .top-section {
         flex-direction: column;
@@ -875,7 +934,7 @@ a {
     }
 
     .upload-area {
-        height: 200px;
+        min-height: 250px; /* Уменьшенная, но все еще увеличенная высота для мобильных */
     }
 
     .upload-container, .calculator-carousel {
@@ -891,11 +950,7 @@ a {
     }
 
     .document-upload-carousel {
-        max-height: 300px;
-    }
-
-    .upload-area {
-        height: 180px;
+        max-height: 450px; /* Увеличено с 300px */
     }
 
     /* Адаптация подсказок для мобильных устройств */
@@ -1042,3 +1097,42 @@ a {
 .analysis-column:last-child .factor-item span:nth-child(2) {
     text-align: center;
 }
+/* Стили для заголовка анализа файла */
+.analysis-title {
+    font-size: 1.8rem;
+    color: #333;
+    margin: 2rem 0 1rem;
+    text-align: center;
+}
+
+    /* Стили для кликабельного заголовка анализа */
+    .analysis-title.toggleable {
+        cursor: pointer;
+        position: relative;
+        padding-left: 25px;
+        transition: color 0.3s ease;
+    }
+
+        .analysis-title.toggleable:hover {
+            color: #007bff;
+        }
+
+        .analysis-title.toggleable::before {
+            content: "▼";
+            position: absolute;
+            left: 0;
+            transition: transform 0.3s ease;
+        }
+
+        .analysis-title.toggleable.collapsed::before {
+            transform: rotate(-90deg);
+        }
+
+        .analysis-title.toggleable::after {
+            content: "(нажмите, чтобы скрыть/показать)";
+            font-size: 0.7em;
+            opacity: 0.7;
+            margin-left: 10px;
+            font-weight: normal;
+            display: inline-block;
+        }

@@ -17,6 +17,9 @@ document.addEventListener('DOMContentLoaded', function () {
         toggleRoiFirstYear(); // Установка правильного состояния при загрузке страницы
     }
 
+    // Перемещаем кнопки карусели за пределы карусели
+    repositionCarouselButtons();
+
     // Настройка сенсорного управления (свайпы)
     const carousel = document.querySelector('.calculator-carousel');
     let startX;
@@ -62,7 +65,62 @@ document.addEventListener('DOMContentLoaded', function () {
     if (accordionHeaders.length > 0) {
         console.log('Аккордеон инициализирован, найдено заголовков:', accordionHeaders.length);
     }
-});// Переменные для карусели
+
+    // Добавляем обработчик для заголовка анализа
+    const analysisTitle = document.getElementById('analysisTitle');
+    if (analysisTitle) {
+        analysisTitle.addEventListener('click', toggleAnalysisVisibility);
+        // Добавляем класс, указывающий на кликабельность
+        analysisTitle.classList.add('toggleable');
+    }
+});
+
+// Функция для перемещения кнопок карусели за пределы карусели
+function repositionCarouselButtons() {
+    const carousel = document.querySelector('.calculator-carousel');
+    const calcSection = document.querySelector('.calc-section');
+
+    if (carousel && calcSection) {
+        // Находим кнопки
+        const prevBtn = carousel.querySelector('.prev-btn');
+        const nextBtn = carousel.querySelector('.next-btn');
+
+        // Удаляем кнопки из текущего контейнера
+        if (prevBtn) carousel.removeChild(prevBtn);
+        if (nextBtn) carousel.removeChild(nextBtn);
+
+        // Создаем новые кнопки с улучшенными стилями
+        const newPrevBtn = document.createElement('button');
+        newPrevBtn.className = 'carousel-btn prev-btn';
+        newPrevBtn.innerHTML = '&#10094;';
+        newPrevBtn.onclick = function () { moveCarousel(-1); };
+        newPrevBtn.style.position = 'absolute';
+        newPrevBtn.style.left = '0px';
+        newPrevBtn.style.width = '40px';
+        newPrevBtn.style.height = '40px';
+        newPrevBtn.style.fontSize = '1.2rem';
+
+        const newNextBtn = document.createElement('button');
+        newNextBtn.className = 'carousel-btn next-btn';
+        newNextBtn.innerHTML = '&#10095;';
+        newNextBtn.onclick = function () { moveCarousel(1); };
+        newNextBtn.style.position = 'absolute';
+        newNextBtn.style.right = '0px';
+        newNextBtn.style.width = '40px';
+        newNextBtn.style.height = '40px';
+        newNextBtn.style.fontSize = '1.2rem';
+
+        // Устанавливаем родительский контейнер в position: relative
+        // для правильного позиционирования абсолютно позиционированных кнопок
+        calcSection.style.position = 'relative';
+
+        // Добавляем кнопки в новый контейнер
+        calcSection.appendChild(newPrevBtn);
+        calcSection.appendChild(newNextBtn);
+    }
+}
+
+// Переменные для карусели
 let currentSlide = 0;
 const totalSlides = 3; // Было 4, теперь 3, так как объединили два калькулятора ROI
 
@@ -123,6 +181,25 @@ const originalUploadAreaContent = uploadArea.innerHTML;
 const originalBackgroundColor = '#f0f8ff';
 
 let currentFileName = '';
+let isAnalysisVisible = true; // Флаг для отслеживания видимости области анализа
+
+// Функция для переключения видимости области анализа
+function toggleAnalysisVisibility() {
+    const analysisResults = document.getElementById('analysisResults');
+
+    // Проверка состояния и переключение
+    isAnalysisVisible = !isAnalysisVisible;
+
+    if (isAnalysisVisible) {
+        analysisResults.style.display = 'block';
+        // Убираем класс "collapsed" при открытии
+        analysisTitleDiv.classList.remove('collapsed');
+    } else {
+        analysisResults.style.display = 'none';
+        // Добавляем класс "collapsed" при закрытии
+        analysisTitleDiv.classList.add('collapsed');
+    }
+}
 
 // Допустимые типы файлов
 const allowedFileTypes = [
@@ -355,117 +432,156 @@ function populateLegalFactors(container, factors) {
     });
 }
 
-// Функция-заглушка для анализа файла - убрана задержка
+// Функция для создания и отображения индикатора загрузки
+function showLoadingIndicator() {
+    const loadingHTML = `
+        <div class="loading-indicator">
+            <div class="spinner"></div>
+            <p>Пожалуйста, подождите. Анализ договора может занять некоторое время...</p>
+        </div>
+    `;
+    resultDiv.innerHTML = loadingHTML;
+    return true;
+}
+
+// Функция-заглушка для анализа файла - с улучшенной обработкой длительных операций
 function analyzeFile(file) {
-    return new Promise((resolve) => {
-        resultDiv.innerHTML = 'Анализ файла...';
+    return new Promise((resolve, reject) => {
+        // Показываем индикатор загрузки
+        showLoadingIndicator();
 
-        // Здесь должна быть заглушка словаря с данными анализа
-        const analysisData = {
-            'Роялти': 35,
-            'Паушальный взнос': 10000000,
-            'Штраф': 1000000,
-            'Правообладатель вправе расторгнуть договор без объяснения причин?': 1,
-            'Даются ли Пользователю права на товарный знак?': 1,
-            'Является ли Правообладатель юридическим лицом?': 1
-        };
+        // Устанавливаем таймаут для имитации длительного анализа
+        const analysisTimeout = setTimeout(() => {
+            // Здесь должна быть заглушка словаря с данными анализа
+            const analysisData = {
+                'Роялти': 35,
+                'Паушальный взнос': 10000000,
+                'Штраф': 1000000,
+                'Правообладатель вправе расторгнуть договор без объяснения причин?': 1,
+                'Даются ли Пользователю права на товарный знак?': 1,
+                'Является ли Правообладатель юридическим лицом?': 1
+            };
 
-        // Разделение словаря на экономические и юридические факторы
-        const economicFactors = {
-            'Роялти': analysisData['Роялти'],
-            'Паушальный взнос': analysisData['Паушальный взнос'],
-            'Штраф': analysisData['Штраф']
-        };
+            // Разделение словаря на экономические и юридические факторы
+            const economicFactors = {
+                'Роялти': analysisData['Роялти'],
+                'Паушальный взнос': analysisData['Паушальный взнос'],
+                'Штраф': analysisData['Штраф']
+            };
 
-        const legalFactors = {
-            'Правообладатель вправе расторгнуть договор без объяснения причин?': analysisData['Правообладатель вправе расторгнуть договор без объяснения причин?'],
-            'Даются ли Пользователю права на товарный знак?': analysisData['Даются ли Пользователю права на товарный знак?'],
-            'Является ли Правообладатель юридическим лицом?': analysisData['Является ли Правообладатель юридическим лицом?']
-        };
+            const legalFactors = {
+                'Правообладатель вправе расторгнуть договор без объяснения причин?': analysisData['Правообладатель вправе расторгнуть договор без объяснения причин?'],
+                'Даются ли Пользователю права на товарный знак?': analysisData['Даются ли Пользователю права на товарный знак?'],
+                'Является ли Правообладатель юридическим лицом?': analysisData['Является ли Правообладатель юридическим лицом?']
+            };
 
-        // Убираем задержку, выполняем мгновенно
-        const economicScore = 1;
-        const legalScore = 1;
+            const economicScore = 1;
+            const legalScore = 1;
 
-        // Отображаем данные в нужных колонках согласно их заголовкам
-        // Первая колонка - юридические данные, вторая - экономические данные
-        displayScore(legalScoreDiv, legalScore);
-        displayScore(economicScoreDiv, economicScore);
+            // Убедимся, что блок анализа отображается
+            analysisResultsDiv.style.display = 'block';
 
-        // Поменяли местами вызовы функций, чтобы таблицы соответствовали заголовкам
-        // Теперь для legalFactorsDiv используем legalFactors, а для economicFactorsDiv - economicFactors
-        populateLegalFactors(legalFactorsDiv, legalFactors);
-        populateEconomicFactors(economicFactorsDiv, economicFactors);
+            // Отображаем данные в нужных колонках согласно их заголовкам
+            displayScore(legalScoreDiv, legalScore);
+            displayScore(economicScoreDiv, economicScore);
 
-        analysisResultsDiv.style.display = 'block';
+            // Обновляем контент
+            populateLegalFactors(legalFactorsDiv, legalFactors);
+            populateEconomicFactors(economicFactorsDiv, economicFactors);
 
-        resolve({
-            success: true,
-            message: 'Файл успешно проанализирован',
-            economicScore: economicScore,
-            legalScore: legalScore
-        });
+            // Очищаем индикатор загрузки
+            resultDiv.innerHTML = '';
+
+            // Сбрасываем флаг видимости и состояние заголовка
+            isAnalysisVisible = true;
+            analysisTitleDiv.classList.remove('collapsed');
+
+            // Успешное завершение промиса
+            resolve({
+                success: true,
+                message: 'Файл успешно проанализирован',
+                economicScore: economicScore,
+                legalScore: legalScore
+            });
+        }, 2000); // Имитация длительного анализа - 2 секунды
+
+        // Добавляем обработку ошибок
+        try {
+            // Здесь может быть обработка файла
+            console.log("Анализ файла:", file.name);
+        } catch (error) {
+            clearTimeout(analysisTimeout);
+            reject(error);
+        }
     });
 }
 
-// Обработчики событий для кнопок скачивания
-downloadReportBtn.addEventListener('click', () => {
-    alert('Загрузка отчета для файла: ' + currentFileName);
-    // Здесь будет реальная функция скачивания
-});
-
-// Функция для обработки файла
+// Обновленная функция для обработки файла
 function handleFile(file) {
     if (!file) return;
 
-    analysisResultsDiv.style.display = 'none';
-    analysisTitleDiv.style.display = 'none';
+    // Сохраняем имя файла
+    currentFileName = file.name;
 
+    // Сначала проверяем тип файла
     if (!isValidFileType(file)) {
         resultDiv.innerHTML = 'Ошибка: Пожалуйста, загрузите только файлы PDF или DOCX.';
+        // Скрываем результаты, если файл некорректен
+        analysisTitleDiv.style.display = 'none';
+        analysisResultsDiv.style.display = 'none';
         return;
     }
 
+    // Отображаем загруженный файл в области загрузки
     uploadArea.innerHTML = `<p>Файл: ${file.name}</p>`;
+    uploadArea.style.backgroundColor = '#e0f7fa';
 
-    currentFileName = file.name;
+    // Показываем начало обработки
+    resultDiv.innerHTML = 'Проверка файла на корректность...';
 
+    // Скрываем блоки анализа перед началом обработки
+    analysisTitleDiv.style.display = 'none';
+    analysisResultsDiv.style.display = 'none';
+
+    // Используем Promise для последовательной обработки
     checkFileValidity(file)
         .then(isValid => {
             if (isValid) {
+                // Обновляем состояние UI перед началом анализа
+                uploadArea.style.backgroundColor = '#CCFFCC';
                 return analyzeFile(file);
             } else {
                 throw new Error('Файл некорректен');
             }
         })
         .then(result => {
+            console.log("Анализ завершен успешно:", result);
+
+            // Очищаем область результатов
             resultDiv.innerHTML = '';
 
-            // Меняем заголовки колонок - должны быть уже правильно установлены в HTML
-            // Первая колонка (слева) будет юридической, вторая (справа) - экономической
-            const analysisColumns = document.querySelectorAll('.analysis-column');
-            if (analysisColumns.length === 2) {
-                // Убедимся, что у нас корректные заголовки
-                const firstHeader = analysisColumns[0].querySelector('h3');
-                const secondHeader = analysisColumns[1].querySelector('h3');
-
-                if (firstHeader && secondHeader) {
-                    firstHeader.textContent = 'Юридическая экспертиза';
-                    secondHeader.textContent = 'Экономическая экспертиза';
-                }
-            }
-
+            // Явно показываем заголовок
             analysisTitleDiv.textContent = `Анализ файла "${currentFileName}"`;
             analysisTitleDiv.style.display = 'block';
 
+            // Явно показываем блок результатов
+            analysisResultsDiv.style.display = 'block';
+
             // Добавляем обработчики для кнопок "Узнать" в экономической экспертизе
             attachEconomicFactorListeners();
+
+            // Прокручиваем страницу к результатам
+            analysisResultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
         })
         .catch(error => {
             console.error('Ошибка:', error);
-            resultDiv.innerHTML = 'Произошла ошибка при обработке файла.';
+            resultDiv.innerHTML = `Произошла ошибка при обработке файла: ${error.message}`;
+            // Скрываем блоки анализа при ошибке
+            analysisTitleDiv.style.display = 'none';
+            analysisResultsDiv.style.display = 'none';
         });
 
+    // Отправляем событие загрузки файла
     sendEvent('file_upload', {
         fileName: file.name,
         fileSize: file.size,
@@ -565,89 +681,6 @@ function attachEconomicFactorListeners() {
     });
 }
 
-// Функция для переключения отображения поля паушального взноса
-function toggleRoiFirstYear() {
-    const isFirstYear = document.getElementById('roiFirstYear').checked;
-    const franchiseFeeRow = document.getElementById('franchiseFeeRow');
-
-    console.log("Переключение режима ROI. За первый год:", isFirstYear);
-
-    if (isFirstYear) {
-        franchiseFeeRow.style.display = 'flex';
-        // Автоматический пересчет при включении чекбокса
-        calculateROIFirstYear();
-    } else {
-        franchiseFeeRow.style.display = 'none';
-        // Автоматический пересчет при выключении чекбокса
-        calculateROI();
-    }
-}
-
-// Обычная функция для расчета ROI (Рентабельность инвестиций)
-function calculateROI() {
-    const income = parseFloat(document.getElementById('roiIncome').value);
-    const investment = parseFloat(document.getElementById('roiInvestment').value);
-
-    // Обычный расчет ROI: (Доход от вложений – Вложения) / Вложения * 100%
-    const roi = ((income - investment) / investment) * 100;
-    console.log("Расчет обычного ROI:");
-    console.log("Доход:", income, "Вложения:", investment);
-    console.log("Формула: ((", income, "-", investment, ") /", investment, ") * 100 =", roi);
-
-    document.getElementById('roiResult').textContent = roi.toLocaleString('ru-RU', {
-        maximumFractionDigits: 2,
-        minimumFractionDigits: 2
-    });
-}
-
-// Специальная функция для расчета ROI за первый год
-function calculateROIFirstYear() {
-    const income = parseFloat(document.getElementById('roiIncome').value);
-    const investment = parseFloat(document.getElementById('roiInvestment').value);
-    const franchiseFee = parseFloat(document.getElementById('roiFranchiseFee').value) || 0;
-
-    // Расчет ROI за первый год: (Доход от вложений – Вложения + паушальный взнос) / Вложения * 100%
-    const roi = ((income - investment - franchiseFee) / investment) * 100;
-    console.log("Расчет ROI за первый год:");
-    console.log("Доход:", income, "Вложения:", investment, "Паушальный взнос:", franchiseFee);
-    console.log("Формула: ((", income, "-", investment, "-", franchiseFee, ") /", investment, ") * 100 =", roi);
-
-    document.getElementById('roiResult').textContent = roi.toLocaleString('ru-RU', {
-        maximumFractionDigits: 2,
-        minimumFractionDigits: 2
-    });
-}
-
-function calculateOCF() {
-    const ebit = parseFloat(document.getElementById('ocfEBIT').value);
-    const depreciation = parseFloat(document.getElementById('ocfDepreciation').value);
-    const taxes = parseFloat(document.getElementById('ocfTaxes').value);
-
-    // OCF = EBIT + Амортизация − Налоги
-    const ocf = ebit + depreciation - taxes;
-
-    document.getElementById('ocfResult').textContent = ocf.toLocaleString('ru-RU', {
-        maximumFractionDigits: 2,
-        minimumFractionDigits: 2
-    });
-}
-
-function calculatePaybackPeriod() {
-    const investment = parseFloat(document.getElementById('poInvestment').value);
-    const franchiseFee = parseFloat(document.getElementById('poFranchiseFee').value);
-    const royalty = parseFloat(document.getElementById('poRoyalty').value);
-    const monthlyProfit = parseFloat(document.getElementById('poMonthlyProfit').value);
-
-    // Срок окупаемости = размер вложений (все планируемые затраты+паушальный взнос+роялти) / планируемая прибыль (за месяц)
-    const totalInvestment = investment + franchiseFee + royalty;
-    const paybackPeriod = totalInvestment / monthlyProfit;
-
-    document.getElementById('poResult').textContent = paybackPeriod.toLocaleString('ru-RU', {
-        maximumFractionDigits: 1,
-        minimumFractionDigits: 1
-    });
-}
-
 // Функция для открытия модального окна с информацией о калькуляторе
 function openCalculatorModal(calculator) {
     const modal = document.getElementById('economicModal') || addModalToDOM();
@@ -664,6 +697,7 @@ function openCalculatorModal(calculator) {
     } else if (calculator === 'roi') {
         modalTitle.textContent = 'Рентабельность инвестиций (ROI)';
         modalContent.innerHTML = `
+            <p>Это общий показатель, насколько прибыльным был ваш бизнес по сравнению с вложениями.</p>
             <p>Это общий показатель, насколько прибыльным был ваш бизнес по сравнению с вложениями.</p>
             <p>Показывает, насколько эффективно вы используете деньги, чтобы зарабатывать.</p>
         `;
@@ -721,4 +755,87 @@ function toggleAccordion(header) {
 
     // Открываем текущий элемент
     item.classList.add('active');
+}
+
+// Функция для переключения отображения поля паушального взноса
+function toggleRoiFirstYear() {
+    const isFirstYear = document.getElementById('roiFirstYear').checked;
+    const franchiseFeeRow = document.getElementById('franchiseFeeRow');
+
+    console.log("Переключение режима ROI. За первый год:", isFirstYear);
+
+    if (isFirstYear) {
+        franchiseFeeRow.style.display = 'flex';
+        // Автоматический пересчет при включении чекбокса
+        calculateROIFirstYear();
+    } else {
+        franchiseFeeRow.style.display = 'none';
+        // Автоматический пересчет при выключении чекбокса
+        calculateROI();
+    }
+}
+
+// Обычная функция для расчета ROI (Рентабельность инвестиций)
+function calculateROI() {
+    const income = parseFloat(document.getElementById('roiIncome').value);
+    const investment = parseFloat(document.getElementById('roiInvestment').value);
+
+    // Обычный расчет ROI: (Доход от вложений – Вложения) / Вложения * 100%
+    const roi = ((income - investment) / investment) * 100;
+    console.log("Расчет обычного ROI:");
+    console.log("Доход:", income, "Вложения:", investment);
+    console.log("Формула: ((", income, "-", investment, ") /", investment, ") * 100 =", roi);
+
+    document.getElementById('roiResult').textContent = roi.toLocaleString('ru-RU', {
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 2
+    });
+}
+
+function calculateOCF() {
+    const ebit = parseFloat(document.getElementById('ocfEBIT').value);
+    const depreciation = parseFloat(document.getElementById('ocfDepreciation').value);
+    const taxes = parseFloat(document.getElementById('ocfTaxes').value);
+
+    // OCF = EBIT + Амортизация − Налоги
+    const ocf = ebit + depreciation - taxes;
+
+    document.getElementById('ocfResult').textContent = ocf.toLocaleString('ru-RU', {
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 2
+    });
+}
+
+function calculatePaybackPeriod() {
+    const investment = parseFloat(document.getElementById('poInvestment').value);
+    const franchiseFee = parseFloat(document.getElementById('poFranchiseFee').value);
+    const royalty = parseFloat(document.getElementById('poRoyalty').value);
+    const monthlyProfit = parseFloat(document.getElementById('poMonthlyProfit').value);
+
+    // Срок окупаемости = размер вложений (все планируемые затраты+паушальный взнос+роялти) / планируемая прибыль (за месяц)
+    const totalInvestment = investment + franchiseFee + royalty;
+    const paybackPeriod = totalInvestment / monthlyProfit;
+
+    document.getElementById('poResult').textContent = paybackPeriod.toLocaleString('ru-RU', {
+        maximumFractionDigits: 1,
+        minimumFractionDigits: 1
+    });
+}
+
+// Специальная функция для расчета ROI за первый год
+function calculateROIFirstYear() {
+    const income = parseFloat(document.getElementById('roiIncome').value);
+    const investment = parseFloat(document.getElementById('roiInvestment').value);
+    const franchiseFee = parseFloat(document.getElementById('roiFranchiseFee').value) || 0;
+
+    // Расчет ROI за первый год: (Доход от вложений – Вложения + паушальный взнос) / Вложения * 100%
+    const roi = ((income - investment - franchiseFee) / investment) * 100;
+    console.log("Расчет ROI за первый год:");
+    console.log("Доход:", income, "Вложения:", investment, "Паушальный взнос:", franchiseFee);
+    console.log("Формула: ((", income, "-", investment, "-", franchiseFee, ") /", investment, ") * 100 =", roi);
+
+    document.getElementById('roiResult').textContent = roi.toLocaleString('ru-RU', {
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 2
+    });
 }

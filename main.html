@@ -127,8 +127,8 @@
 
         <!-- Двухколоночный блок для загрузки файла и доп. информации -->
         <div class="upload-info-section">
-            <!-- Левая колонка - область загрузки файла -->
-            <div class="column upload-column">
+            <!-- Область загрузки файла (на всю ширину) -->
+            <div class="upload-column full-width">
                 <h2>
                     Загрузка документов
                     <span class="info-tooltip" data-tooltip="Загрузите файл договора формата PDF или DOCX для анализа.">?</span>
@@ -145,112 +145,112 @@
                     <div class="result-area" id="result"></div>
                 </div>
             </div>
+        </div>
 
-            <!-- Правая колонка - экономические калькуляторы -->
-            <div class="column calc-column">
-                <h2>
-                    Экономические калькуляторы
-                </h2>
+        <!-- Секция с калькуляторами (отдельный блок) -->
+        <div class="calc-section">
+            <h2>
+                Экономические калькуляторы
+            </h2>
 
-                <div class="calculator-carousel">
-                    <!-- Кнопки для навигации по карусели -->
-                    <button class="carousel-btn prev-btn" onclick="moveCarousel(-1)">&#10094;</button>
-                    <button class="carousel-btn next-btn" onclick="moveCarousel(1)">&#10095;</button>
+            <div class="calculator-carousel">
+                <!-- Кнопки для навигации по карусели -->
+                <button class="carousel-btn prev-btn" onclick="moveCarousel(-1)">&#10094;</button>
+                <button class="carousel-btn next-btn" onclick="moveCarousel(1)">&#10095;</button>
 
-                    <!-- Контейнер карусели -->
-                    <div class="carousel-track" id="calculatorCarousel">
-                        <!-- Калькулятор Срока Окупаемости -->
-                        <div class="calculator-block slide">
-                            <h3>
-                                Срок окупаемости
-                                <span class="info-tooltip" data-tooltip="Период времени, за который доходы от инвестиций сравняются с первоначальными вложениями.">?</span>
-                            </h3>
-                            <div class="calculator-form">
-                                <div class="form-row">
-                                    <label for="poInvestment">Размер вложений (₽):</label>
-                                    <input type="number" id="poInvestment" class="calc-input" value="1000000" oninput="calculatePaybackPeriod()">
-                                </div>
-                                <div class="form-row">
-                                    <label for="poFranchiseFee">Паушальный взнос (₽):</label>
-                                    <input type="number" id="poFranchiseFee" class="calc-input" value="200000" oninput="calculatePaybackPeriod()">
-                                </div>
-                                <div class="form-row">
-                                    <label for="poRoyalty">Роялти (₽):</label>
-                                    <input type="number" id="poRoyalty" class="calc-input" value="50000" oninput="calculatePaybackPeriod()">
-                                </div>
-                                <div class="form-row">
-                                    <label for="poMonthlyProfit">Планируемая прибыль (₽/мес):</label>
-                                    <input type="number" id="poMonthlyProfit" class="calc-input" value="100000" oninput="calculatePaybackPeriod()">
-                                </div>
-                                <div class="result-field">
-                                    <p>Срок окупаемости: <span id="poResult">-</span> месяцев</p>
-                                </div>
+                <!-- Контейнер карусели -->
+                <div class="carousel-track" id="calculatorCarousel">
+                    <!-- Калькулятор Срока Окупаемости -->
+                    <div class="calculator-block slide">
+                        <h3>
+                            Срок окупаемости
+                            <span class="info-tooltip" data-tooltip="Период времени, за который доходы от инвестиций сравняются с первоначальными вложениями.">?</span>
+                        </h3>
+                        <div class="calculator-form">
+                            <div class="form-row">
+                                <label for="poInvestment">Размер вложений (₽):</label>
+                                <input type="number" id="poInvestment" class="calc-input" value="1000000" oninput="calculatePaybackPeriod()">
                             </div>
-                        </div>
-
-                        <!-- Объединенный калькулятор ROI (Рентабельность инвестиций) -->
-                        <div class="calculator-block slide">
-                            <h3>
-                                Рентабельность инвестиций (ROI)
-                                <span class="info-tooltip" data-tooltip="Показатель эффективности инвестиций.">?</span>
-                            </h3>
-                            <div class="calculator-form">
-                                <div class="form-row checkbox-row">
-                                    <label for="roiFirstYear" class="checkbox-label">
-                                        <input type="checkbox" id="roiFirstYear" onchange="toggleRoiFirstYear()">
-                                        За первый год
-                                    </label>
-                                </div>
-                                <div class="form-row">
-                                    <label for="roiIncome">Доход от вложений (₽):</label>
-                                    <input type="number" id="roiIncome" class="calc-input" value="1500000" onchange="recalculateROIBasedOnCheckbox()" oninput="recalculateROIBasedOnCheckbox()">
-                                </div>
-                                <div class="form-row">
-                                    <label for="roiInvestment">Вложения (₽):</label>
-                                    <input type="number" id="roiInvestment" class="calc-input" value="1000000" onchange="recalculateROIBasedOnCheckbox()" oninput="recalculateROIBasedOnCheckbox()">
-                                </div>
-                                <div class="form-row" id="franchiseFeeRow" style="display: none;">
-                                    <label for="roiFranchiseFee">Паушальный взнос (₽):</label>
-                                    <input type="number" id="roiFranchiseFee" class="calc-input" value="200000" onchange="calculateROIFirstYear()" oninput="calculateROIFirstYear()">
-                                </div>
-                                <div class="result-field">
-                                    <p>ROI: <span id="roiResult">-</span> %</p>
-                                </div>
+                            <div class="form-row">
+                                <label for="poFranchiseFee">Паушальный взнос (₽):</label>
+                                <input type="number" id="poFranchiseFee" class="calc-input" value="200000" oninput="calculatePaybackPeriod()">
                             </div>
-                        </div>
-
-                        <!-- Калькулятор OCF (Денежный поток от операционной деятельности) -->
-                        <div class="calculator-block slide">
-                            <h3>
-                                Денежный поток (OCF)
-                                <span class="info-tooltip" data-tooltip="Реальное движение денежных средств от основной деятельности.">?</span>
-                            </h3>
-                            <div class="calculator-form">
-                                <div class="form-row">
-                                    <label for="ocfEBIT">EBIT (₽):</label>
-                                    <input type="number" id="ocfEBIT" class="calc-input" value="500000" oninput="calculateOCF()">
-                                </div>
-                                <div class="form-row">
-                                    <label for="ocfDepreciation">Амортизация (₽):</label>
-                                    <input type="number" id="ocfDepreciation" class="calc-input" value="100000" oninput="calculateOCF()">
-                                </div>
-                                <div class="form-row">
-                                    <label for="ocfTaxes">Налоги (₽):</label>
-                                    <input type="number" id="ocfTaxes" class="calc-input" value="75000" oninput="calculateOCF()">
-                                </div>
-                                <div class="result-field">
-                                    <p>OCF: <span id="ocfResult">-</span> ₽</p>
-                                </div>
+                            <div class="form-row">
+                                <label for="poRoyalty">Роялти (₽):</label>
+                                <input type="number" id="poRoyalty" class="calc-input" value="50000" oninput="calculatePaybackPeriod()">
+                            </div>
+                            <div class="form-row">
+                                <label for="poMonthlyProfit">Планируемая прибыль (₽/мес):</label>
+                                <input type="number" id="poMonthlyProfit" class="calc-input" value="100000" oninput="calculatePaybackPeriod()">
+                            </div>
+                            <div class="result-field">
+                                <p>Срок окупаемости: <span id="poResult">-</span> месяцев</p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Индикаторы страниц карусели -->
-                    <div class="carousel-indicators">
-                        <span class="indicator active" onclick="showSlide(0)"></span>
-                        <span class="indicator" onclick="showSlide(1)"></span>
-                        <span class="indicator" onclick="showSlide(2)"></span>
+                    <!-- Объединенный калькулятор ROI (Рентабельность инвестиций) -->
+                    <div class="calculator-block slide">
+                        <h3>
+                            Рентабельность инвестиций (ROI)
+                            <span class="info-tooltip" data-tooltip="Показатель эффективности инвестиций.">?</span>
+                        </h3>
+                        <div class="calculator-form">
+                            <div class="form-row checkbox-row">
+                                <label for="roiFirstYear" class="checkbox-label">
+                                    <input type="checkbox" id="roiFirstYear" onchange="toggleRoiFirstYear()">
+                                    За первый год
+                                </label>
+                            </div>
+                            <div class="form-row">
+                                <label for="roiIncome">Доход от вложений (₽):</label>
+                                <input type="number" id="roiIncome" class="calc-input" value="1500000" onchange="recalculateROIBasedOnCheckbox()" oninput="recalculateROIBasedOnCheckbox()">
+                            </div>
+                            <div class="form-row">
+                                <label for="roiInvestment">Вложения (₽):</label>
+                                <input type="number" id="roiInvestment" class="calc-input" value="1000000" onchange="recalculateROIBasedOnCheckbox()" oninput="recalculateROIBasedOnCheckbox()">
+                            </div>
+                            <div class="form-row" id="franchiseFeeRow" style="display: none;">
+                                <label for="roiFranchiseFee">Паушальный взнос (₽):</label>
+                                <input type="number" id="roiFranchiseFee" class="calc-input" value="200000" onchange="calculateROIFirstYear()" oninput="calculateROIFirstYear()">
+                            </div>
+                            <div class="result-field">
+                                <p>ROI: <span id="roiResult">-</span> %</p>
+                            </div>
+                        </div>
                     </div>
+
+                    <!-- Калькулятор OCF (Денежный поток от операционной деятельности) -->
+                    <div class="calculator-block slide">
+                        <h3>
+                            Денежный поток (OCF)
+                            <span class="info-tooltip" data-tooltip="Реальное движение денежных средств от основной деятельности.">?</span>
+                        </h3>
+                        <div class="calculator-form">
+                            <div class="form-row">
+                                <label for="ocfEBIT">EBIT (₽):</label>
+                                <input type="number" id="ocfEBIT" class="calc-input" value="500000" oninput="calculateOCF()">
+                            </div>
+                            <div class="form-row">
+                                <label for="ocfDepreciation">Амортизация (₽):</label>
+                                <input type="number" id="ocfDepreciation" class="calc-input" value="100000" oninput="calculateOCF()">
+                            </div>
+                            <div class="form-row">
+                                <label for="ocfTaxes">Налоги (₽):</label>
+                                <input type="number" id="ocfTaxes" class="calc-input" value="75000" oninput="calculateOCF()">
+                            </div>
+                            <div class="result-field">
+                                <p>OCF: <span id="ocfResult">-</span> ₽</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Индикаторы страниц карусели -->
+                <div class="carousel-indicators">
+                    <span class="indicator active" onclick="showSlide(0)"></span>
+                    <span class="indicator" onclick="showSlide(1)"></span>
+                    <span class="indicator" onclick="showSlide(2)"></span>
                 </div>
             </div>
         </div>
@@ -407,3 +407,4 @@
     <script src="script.js"></script>
 </body>
 </html>
+```
