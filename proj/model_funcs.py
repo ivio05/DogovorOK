@@ -26,6 +26,8 @@ def read_contract(name):
     return text
 
 def law_factors(text):
+    sent_re = re.compile(r'[^\.。]*[\.。]\s*')
+    split_text = sent_re.findall(text)
     morph = pymorphy3.MorphAnalyzer()
     words = text.split()
 
@@ -37,80 +39,118 @@ def law_factors(text):
                                morph.parse('лицензиар')[0].normal_form,
                                morph.parse('лицензиат')[0].normal_form]
     rospatent_base = morph.parse('роспатент')[0].normal_form
-    working_days_base = [morph.parse('рабочие')[0].normal_form,
-                         morph.parse('дни')[0].normal_form]
+    registration_term_base = [morph.parse('рабочие')[0].normal_form,
+                         morph.parse('дни')[0].normal_form,
+                         morph.parse('регистрация')[0].normal_form,
+                         morph.parse('не')[0].normal_form,
+                         morph.parse('позднее')[0].normal_form]
     competition_base = [morph.parse('запретить')[0].normal_form,
                          morph.parse('запрещать')[0].normal_form,
                          morph.parse('конкуренция')[0].normal_form]
     automatic_null_base = [morph.parse('автоматический')[0].normal_form,
                          morph.parse('прекращение')[0].normal_form,
                          morph.parse('расторжение')[0].normal_form]
+    reward_base = [morph.parse('вознаграждение')[0].normal_form,
+                         morph.parse('составляет')[0].normal_form,
+                         morph.parse('устанавливается')[0].normal_form]
+    one_sided_null_base = [morph.parse('односторонний')[0].normal_form,
+                         morph.parse('расторгнуть')[0].normal_form,
+                         morph.parse('объяснение')[0].normal_form,
+                         morph.parse('причин')[0].normal_form]
+    objection_base = [morph.parse('спор')[0].normal_form,
+                      morph.parse('претензия')[0].normal_form,
+                      morph.parse('направить')[0].normal_form,]
+    duration_base = [morph.parse('срок')[0].normal_form,
+                         morph.parse('действия')[0].normal_form,
+                         morph.parse('вступать')[0].normal_form,
+                         morph.parse('сила')[0].normal_form,
+                         morph.parse('действовать')[0].normal_form]
+    certificate_base = [morph.parse('свидетельство')[0].normal_form,
+                               morph.parse('№')[0].normal_form]
+    trademark_base = [morph.parse('товарный')[0].normal_form,
+                               morph.parse('знак')[0].normal_form]
+
 
     state_registration_found = False
     rospatent_found = False
-    working_days_found = False
+    registration_term_found = False
     license_found = False
     competition_found = False
     automatic_null_found = False
+    reward_found = False
+    one_sided_null_found = False
+    objection_1_found = False
+    objection_2_found = False
+    duration_found = False
+    certificate_found = False
+    trademark_found = False
 
-    registration_positions = []
-    working_days_positions = []
+    registration_sent_index = -1
+    registration_term_sent_index = -1
 
-    comp_ind = -100000
 
-    for index in range(len(words) - 1):
-        first_word = morph.parse(words[index])[0].normal_form
-        second_word = morph.parse(words[index + 1])[0].normal_form
-
-        if first_word == state_registration_base[0] and second_word == state_registration_base[1]:
+    for sent_index in range(len(split_text)):
+        words = split_text[sent_index].split()
+        parsed_words = []
+        for word in words:
+            parsed_words.append(morph.parse(word)[0].normal_form)
+        if state_registration_base[0] in parsed_words and state_registration_base[1] in parsed_words:
             state_registration_found = True
-            registration_positions.append(index)
-        if first_word == license_base[0] and (second_word == license_base[1] or second_word == license_base[2]):
+            registration_sent_index = sent_index
+        if license_base[0] in parsed_words and (license_base[1] in parsed_words or license_base[2] in parsed_words):
             license_found = True
         if not license_found:
-            if license_base[3] in morph.parse(words[index])[0].normal_form or license_base[4] in morph.parse(words[index])[0].normal_form:
+            if license_base[3] in parsed_words or license_base[4] in parsed_words:
                 license_found = True
-        if rospatent_base in morph.parse(words[index])[0].normal_form:
+        if rospatent_base in parsed_words:
             rospatent_found = True
-        if competition_base[0] in morph.parse(words[index])[0].normal_form or competition_base[1] in morph.parse(words[index])[0].normal_form:
-            comp_ind = index
-        if competition_base[2] in morph.parse(words[index])[0].normal_form and index - comp_ind <= 4:
+        if (competition_base[0] in parsed_words or competition_base[1] in parsed_words) and competition_base[2] in parsed_words:
             competition_found = True
-        if first_word == working_days_base[0] and second_word == working_days_base[1]:
-            working_days_found = True
-            working_days_positions.append(index)
-        if first_word == automatic_null_base[0] and (second_word == automatic_null_base[1] or second_word == automatic_null_base[2]):
-            automatic_null_found_found = True
+        if registration_term_base[0] in parsed_words and registration_term_base[1] in parsed_words and parsed_words.index(registration_term_base[1]) - parsed_words.index(registration_term_base[0]) == 1:
+            registration_term_sent_index = sent_index
+            if registration_term_sent_index - registration_sent_index < 5:
+                registration_term_found = True
+        if not registration_term_found:
+            if registration_term_base[2] in parsed_words and registration_term_base[3] in parsed_words and registration_term_base[4] in parsed_words:
+                registration_term_found = True
+        if automatic_null_base[0] in parsed_words and (automatic_null_base[1] in parsed_words or automatic_null_base[2] in parsed_words):
+            automatic_null_found = True
+        if reward_base[0] in parsed_words and (reward_base[1] in parsed_words or reward_base[2] in parsed_words):
+            reward_found = True
+        if one_sided_null_base[0] in parsed_words and one_sided_null_base[1] in parsed_words and one_sided_null_base[2] in parsed_words and one_sided_null_base[3] in parsed_words:
+            one_sided_null_found = True
+        if objection_base[0] in parsed_words:
+            objection_1_found = True
+        if objection_base[1] in parsed_words and objection_base[2] in parsed_words:
+            objection_2_found = True
+        if duration_base[0] in parsed_words and duration_base[1] in parsed_words or duration_base[2] in parsed_words and duration_base[3] in parsed_words and duration_base[4] in parsed_words:
+            duration_found = True
+        if certificate_base[0] in parsed_words and certificate_base[1] in parsed_words:
+            certificate_found = True
+        if trademark_base[0] in parsed_words and trademark_base[1] in parsed_words:
+            trademark_found = True
+
+
+
+
+
+
+
 
     results = {
-        "Правообладатель не вправе расторгнуть договор без объяснения причин?" : 1,
-        "Даются ли Пользователю права на товарный знак?" : 1,
+        "Даются ли Пользователю права на товарный знак?" : trademark_found,
         "Является ли Правообладатель юридическим лицом?" : 1,
         "Имееется ли государственная регистрация?": state_registration_found or rospatent_found,
         "Это лицензионное соглашение?": license_found,
-        "Указаны ли рабочие дни?": working_days_found,
+        "Указаны ли рабочие дни?": registration_term_found,
         "Отсутствует ли запрет конкуренции?": not competition_found,
-        "Отсутсвует ли автоматическое расторжение?": not automatic_null_found
+        "Отсутствует ли автоматическое расторжение?": not automatic_null_found,
+        "Указан ли размер вознаграждения?": reward_found,
+        "Возможно ли одностороннее расторжение без объяснения причин?": one_sided_null_found,
+        "Указаны положения о претензионном порядке?": objection_1_found and objection_2_found,
+        "Указан ли срок действия договора?": duration_found,
+        "Указан ли номер свидетельства правообладателя?": certificate_found
     }
-    # print(results)
-    for pos in registration_positions:
-        start = max(0, pos - 40)
-        end = min(len(words), pos + 2 + 40)
-        substring = ' '.join(words[start:end])
-        pattern = r'(d+)s+рабочихs+дней'
-        matches = re.findall(pattern, substring)
-
-
-
-    for pos in working_days_positions:
-        start = max(0, pos - 40)
-        end = min(len(words), pos + 2 + 40)
-        substring = ' '.join(words[start:end])
-        pattern = r'(d+)s+рабочиеs+дни'
-        matches = re.findall(pattern, substring)
-
-        if matches:
-            results["Указаны ли рабочие дни?"].extend(matches)
 
     return results
 
@@ -142,7 +182,7 @@ def law_factors(text):
 #         model=model,
 #         tokenizer=tokenizer,
 #     )
-         
+
 #     generation_args = {
 #         "max_new_tokens": 100,
 #         "return_full_text": False,
@@ -153,7 +193,7 @@ def law_factors(text):
 #     # add = " ответ должен содержать одно слово - либо 'да' либо 'нет'"
 #     questions = ["Какое роялти или вознаграждение? Какой паушальный взнос (если его нет, ответь 0)? Какой штраф (если его нет, ответь 0)? В ответе напиши только 3 числа через ';' без дополнительной информации.",
 #                  "Ответь на каждый из этих трёх вопросов только одним словом 'да' или 'нет', разделяя ответы ';': Правообладатель вправе расторгнуть договор без объяснения причин? Даются ли Пользователю права на товарный знак? Является ли Правообладатель юридическим лицом?."]
-    
+
 #     answers = []
 #     for question in questions:
 #         messages = [
@@ -246,7 +286,7 @@ def fin_factors(text):
                 per -= 1
             if len(p) > 0:
                 paush = int(p) * coef
-        
+
         if ("штраф" in sent_l) and "руб" in sent_l:
             tokens = re.findall(splitter.pattern, sent)
             per = tokens.index("руб") - 1
@@ -270,7 +310,7 @@ def fin_factors(text):
                 per -= 1
             if len(f) > 0:
                 fine = int(f) * coef
-    
+
     return {"Роялти" : royalty,
     "Паушальный взнос" : paush,
     "Штраф" : fine}
@@ -300,18 +340,18 @@ def check_contract(name):
         law_mark = 2
     elif not law['Является ли Правообладатель юридическим лицом?']:
         law_mark = 2
-    
+
     fin_mark = 3
 
     if fin["Роялти"] > 35 or fin["Паушальный взнос"] > 5000000 or fin["Штраф"] > 500000:
         fin_mark = 1
     elif fin["Роялти"] > 15 or fin["Паушальный взнос"] > 1000000 or fin["Штраф"] > 100000:
         fin_mark = 2
-    
-    return law_mark, fin_mark, law, fin
-    
 
-    
+    return law_mark, fin_mark, law, fin
+
+
+
 
 # print(fin_factors(read_contract("doc2.pdf")))
 
