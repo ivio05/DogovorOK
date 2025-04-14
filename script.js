@@ -92,20 +92,20 @@ function repositionCarouselButtons() {
         // Создаем новые кнопки с улучшенными стилями
         const newPrevBtn = document.createElement('button');
         newPrevBtn.className = 'carousel-btn prev-btn';
-        newPrevBtn.innerHTML = '&#10094;';
+        newPrevBtn.innerHTML = '<img src="./images/left_arrow.png" alt="Назад" style="width:300%; height:300%;">';
         newPrevBtn.onclick = function () { moveCarousel(-1); };
         newPrevBtn.style.position = 'absolute';
-        newPrevBtn.style.left = '0px';
+        newPrevBtn.style.left = '30px';
         newPrevBtn.style.width = '40px';
         newPrevBtn.style.height = '40px';
         newPrevBtn.style.fontSize = '1.2rem';
 
         const newNextBtn = document.createElement('button');
         newNextBtn.className = 'carousel-btn next-btn';
-        newNextBtn.innerHTML = '&#10095;';
+        newNextBtn.innerHTML = '<img src="./images/right_arrow.png" alt="Назад" style="width:300%; height:300%;">';
         newNextBtn.onclick = function () { moveCarousel(1); };
         newNextBtn.style.position = 'absolute';
-        newNextBtn.style.right = '0px';
+        newNextBtn.style.right = '30px';
         newNextBtn.style.width = '40px';
         newNextBtn.style.height = '40px';
         newNextBtn.style.fontSize = '1.2rem';
@@ -697,7 +697,6 @@ function openCalculatorModal(calculator) {
     } else if (calculator === 'roi') {
         modalTitle.textContent = 'Рентабельность инвестиций (ROI)';
         modalContent.innerHTML = `
-            <p>Это общий показатель, насколько прибыльным был ваш бизнес по сравнению с вложениями.</p>
             <p>Это общий показатель, насколько прибыльным был ваш бизнес по сравнению с вложениями.</p>
             <p>Показывает, насколько эффективно вы используете деньги, чтобы зарабатывать.</p>
         `;

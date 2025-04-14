@@ -39,10 +39,22 @@
     box-sizing: border-box;
 }
 
+@font-face {
+    font-family: 'CustomFont';
+    src: url('./fonts/custom-font.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
 /* Основные стили */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
+    font-family: 'CustomFont', Arial, sans-serif;
+    background-color: #000;
+    background-image: url('./images/site-bg.jpg');
+    background-size: 50px 50px;
+    background-position: center;
+    background-repeat: repeat;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -53,6 +65,10 @@ body {
 /* Плашка с названием сайта */
 .site-header {
     background-color: #000;
+    background-image: url('./images/header-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     color: #fff;
     width: 100%;
     padding: 1rem 2rem;
@@ -67,7 +83,7 @@ body {
 }
 
 .site-logo {
-    max-height: 60px;
+    max-height: 70px;
     width: auto;
 }
 
@@ -88,7 +104,11 @@ body {
 
 /* Основной контейнер */
 .main-container {
-    background-color: #fff;
+    background-color: rgba(255, 255, 255, 0.9);
+    background-image: url('./images/main-bg.jpg');
+    background-size: 50px;
+    background-position: center;
+    background-repeat: no-repeat;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     width: 80%;
@@ -191,7 +211,7 @@ header {
 /* Калькуляторы - теперь шире */
 .calculator-carousel {
     position: relative;
-    max-height: 350px;
+    height: 310px;
     overflow: hidden;
     margin: 0 auto;
     max-width: 800px; /* Ограничиваем максимальную ширину для удобства */
@@ -306,23 +326,27 @@ header {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    width: 25px;
-    height: 25px;
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
+    transform-origin: center; /* Центр масштабирования */
+    width: 40px;
+    height: 40px;
+    background-color: transparent;
     border: none;
     border-radius: 50%;
-    font-size: 0.8rem;
     cursor: pointer;
     z-index: 5;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 0.3s;
+    transition: transform 0.3s ease;
+    padding: 0;
 }
 
     .carousel-btn:hover {
-        background-color: rgba(0, 0, 0, 0.7);
+        transform: translateY(-50%) scale(1.2); /* масштаб + сохранение вертикального выравнивания */
+    }
+
+    .carousel-btn:active {
+        transform: translateY(-50%) scale(0.95); /* немного сжимается при нажатии */
     }
 
 .prev-btn {
@@ -456,16 +480,13 @@ header {
 
 /* Стили для информационных подсказок */
 .info-tooltip {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 1.2em;
-    height: 1.2em;
-    border-radius: 50%;
-    background-color: #007bff;
-    color: white;
-    font-size: 0.9em;
-    font-weight: bold;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    background-image: url('./images/info-icon.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     margin-left: 0.5rem;
     cursor: help;
     position: relative;
@@ -561,8 +582,8 @@ header {
 }
 
 .score {
-    width: 5rem;
-    height: 5rem;
+    width: 7rem;
+    height: 7rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -643,21 +664,24 @@ header {
     }
 
     .factor-item a {
-        padding: 0.25rem 0.5rem;
-        background-color: #007bff;
-        color: white;
-        border-radius: 4px;
-        text-align: center;
-        text-decoration: none;
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 100%;
+        text-align: center;
+        padding: 0.25rem 0.5rem;
+        transform-origin: center;
+        background-color: transparent; /* Прозрачный фон */
+        color: #007bff; /* Цвет текста */
+        border: 1.5px solid #007bff; /* Синяя рамка */
+        border-radius: 4px;
+        text-decoration: none;
+        height: 35px;
+        width: 80px;
     }
 
+
         .factor-item a:hover {
-            background-color: #0069d9;
-            text-decoration: none;
+            transform: scale(1.1);
         }
 
 /* Специальные стили для юридической экспертизы */
@@ -701,8 +725,10 @@ header {
     .link-dropdown .main-link {
         display: inline-block;
         padding: 0.25rem 0.5rem;
-        background-color: #007bff;
-        color: white;
+        transform-origin: center;
+        background-color: transparent; /* Прозрачный фон */
+        color: #007bff; /* Цвет текста */
+        border: 1.5px solid #007bff; /* Синяя рамка */
         border-radius: 4px;
         text-decoration: none;
         width: 80px;
@@ -711,33 +737,38 @@ header {
     }
 
         .link-dropdown .main-link:hover {
-            background-color: #0069d9;
+            transform: scale(1.1);
         }
 
     .link-dropdown .dropdown-content {
         display: none;
         position: absolute;
         background-color: #f9f9f9;
-        min-width: 150px;
+        width: 150px;
         box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
         z-index: 1;
         right: 0;
         border-radius: 4px;
         overflow: hidden;
         top: 100%;
+        align-items: flex-end;
     }
 
         .link-dropdown .dropdown-content a {
-            color: black;
-            padding: 10px;
-            text-decoration: none;
             display: block;
-            text-align: left;
-            font-size: 0.9rem;
             width: 100%;
-            border-bottom: 1px solid #eee;
+            padding: 10px 14px;
+            margin-bottom: 6px;
             background-color: transparent;
+            color: #333; /* Нормальный текст */
+            border: none; /* Убираем рамку */
+            font-size: 1rem;
+            text-align: left;
+            border-radius: 0;
+            transition: background-color 0.2s ease;
+            white-space: nowrap;
         }
+
 
             .link-dropdown .dropdown-content a:last-child {
                 border-bottom: none;
@@ -802,9 +833,11 @@ header {
 
 .download-btn {
     background-color: #007bff;
-    color: white;
-    border: none;
     border-radius: 4px;
+    transform-origin: center;
+    background-color: transparent; /* Прозрачный фон */
+    color: #007bff; /* Цвет текста */
+    border: 1.5px solid #007bff; /* Синяя рамка */
     padding: 0.75rem 1.5rem;
     font-size: 1rem;
     cursor: pointer;
@@ -814,7 +847,7 @@ header {
 }
 
     .download-btn:hover {
-        background-color: #0056b3;
+        transform: scale(1.1);
     }
 
 .info-tooltip.tooltip-top {
@@ -888,7 +921,7 @@ a {
 }
 
 .accordion-content {
-    padding: 0;
+    padding: 0px 20px;
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.3s ease, padding 0.3s ease;
