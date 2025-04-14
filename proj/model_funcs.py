@@ -142,7 +142,7 @@ def law_factors(text):
         "Является ли Правообладатель юридическим лицом?" : 1,
         "Имееется ли государственная регистрация?": state_registration_found or rospatent_found,
         "Это лицензионное соглашение?": license_found,
-        "Указаны ли рабочие дни?": registration_term_found,
+        "Указан порядок подачи документов в Роспатент?": registration_term_found,
         "Отсутствует ли запрет конкуренции?": not competition_found,
         "Отсутствует ли автоматическое расторжение?": not automatic_null_found,
         "Указан ли размер вознаграждения?": reward_found,
@@ -336,7 +336,7 @@ def check_contract(name):
         law_mark = 1
     elif not law['Имееется ли государственная регистрация?']:
         law_mark = 1
-    elif not law['Указаны ли рабочие дни?']:
+    elif not law['Указан порядок подачи документов в Роспатент?']:
         law_mark = 2
     elif not law['Является ли Правообладатель юридическим лицом?']:
         law_mark = 2
