@@ -516,6 +516,25 @@ function analyzeFile(file) {
     });
 }
 
+
+document.getElementById('checkCounterparty').addEventListener('click', function (e) {
+    e.preventDefault();
+    const modal = document.getElementById('checkModal');
+    modal.style.display = 'block';
+});
+
+document.getElementById('closeCheckModal').addEventListener('click', function () {
+    document.getElementById('checkModal').style.display = 'none';
+});
+
+window.addEventListener('click', function (e) {
+    const modal = document.getElementById('checkModal');
+    if (e.target === modal) {
+        modal.style.display = 'none';
+    }
+});
+
+
 // Обновленная функция для обработки файла
 function handleFile(file) {
     if (!file) return;
