@@ -672,10 +672,9 @@ function addModalToDOM() {
 // Функция для открытия модального окна
 function openEconomicModal(factor) {
     const modal = document.getElementById('economicModal') || addModalToDOM();
-    const modalTitle = document.getElementById('modalTitle');
-    const modalContent = document.getElementById('modalContent');
+    const modalTitle = modal.querySelector('#modalTitle');
+    const modalContent = modal.querySelector('#modalContent');
 
-    // Устанавливаем заголовок и содержимое
     modalTitle.textContent = factor;
     if (factor === 'Роялти') {
         modalContent.textContent = `Это регулярный (обычно ежемесячный) платёж, который вы платите владельцу франшизы за право пользоваться его брендом и получать поддержку. Обычно рассчитывается как процент от вашей выручки.`;
@@ -683,11 +682,13 @@ function openEconomicModal(factor) {
         modalContent.textContent = `Это разовый платёж, который вы платите в начале, чтобы купить право открыть франшизу и использовать бренд, бизнес-модель и поддержку франчайзера.`;
     } else if (factor === 'Штраф') {
         modalContent.textContent = `Предусмотрены за нарушение условий договора франчайзинга, например, несоблюдение стандартов бренда, просрочку платежей или несанкционированное раскрытие коммерческой тайны.`;
+    } else {
+        modalContent.textContent = '';
     }
 
-    // Отображаем модальное окно
     modal.style.display = "block";
 }
+
 
 // Функция для добавления обработчиков к существующим кнопкам
 function attachEconomicFactorListeners() {
@@ -703,32 +704,37 @@ function attachEconomicFactorListeners() {
 // Функция для открытия модального окна с информацией о калькуляторе
 function openCalculatorModal(calculator) {
     const modal = document.getElementById('economicModal') || addModalToDOM();
-    const modalTitle = document.getElementById('modalTitle');
-    const modalContent = document.getElementById('modalContent');
+    const modalTitle = modal.querySelector('#modalTitle');
+    const modalContent = modal.querySelector('#modalContent');
 
-    // Устанавливаем заголовок и содержимое в зависимости от типа калькулятора
-    if (calculator === 'payback') {
-        modalTitle.textContent = 'Срок окупаемости';
-        modalContent.innerHTML = `
-            <p>Это время, за которое вы вернёте вложенные деньги.</p>
-            <p> Например, если вы вложили 1 млн и вернули их за 2 года — срок окупаемости 2 года.</p>
-        `;
-    } else if (calculator === 'roi') {
-        modalTitle.textContent = 'Рентабельность инвестиций (ROI)';
-        modalContent.innerHTML = `
-            <p>Это общий показатель, насколько прибыльным был ваш бизнес по сравнению с вложениями.</p>
-            <p>Показывает, насколько эффективно вы используете деньги, чтобы зарабатывать.</p>
-        `;
-    } else if (calculator === 'ocf') {
-        modalTitle.textContent = 'Денежный поток (OCF)';
-        modalContent.innerHTML = `
-            <p>Это реальные деньги, которые остались у вас после всех операционных расходов (например, после оплаты аренды, зарплат, товаров и т.п.). Он показывает, сколько вы действительно зарабатываете на бизнесе.</p>
-        `;
+    switch (calculator) {
+        case 'payback':
+            modalTitle.textContent = 'Срок окупаемости';
+            modalContent.innerHTML = `
+                <p>Это время, за которое вы вернёте свои инвестиции. Рассчитывается как сумма вложений, делённая на ежемесячную прибыль. Чем короче срок окупаемости — тем быстрее бизнес начнёт приносить прибыль.</p>
+            `;
+            break;
+        case 'roi':
+            modalTitle.textContent = 'Рентабельность инвестиций (ROI)';
+            modalContent.innerHTML = `
+                <p>Показатель, отражающий, насколько прибыльна инвестиция. Рассчитывается как соотношение дохода к вложениям и выражается в процентах. Высокий ROI говорит о хорошей доходности проекта.</p>
+            `;
+            break;
+        case 'ocf':
+            modalTitle.textContent = 'Операционный денежный поток (OCF)';
+            modalContent.innerHTML = `
+                <p>OCF — это деньги, которые остаются у бизнеса после оплаты всех операционных расходов. Помогает оценить реальную платежеспособность компании, независимо от инвестиций и кредитов.</p>
+            `;
+            break;
+        default:
+            modalTitle.textContent = 'Информация';
+            modalContent.innerHTML = '<p>Описание калькулятора недоступно.</p>';
+            break;
     }
 
-    // Отображаем модальное окно
     modal.style.display = "block";
 }
+
 
 // Добавляем обработчики для результатов калькуляторов
 function attachCalculatorResultListeners() {
