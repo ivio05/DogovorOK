@@ -948,6 +948,18 @@ a {
     border-top: 1px solid #e0e0e0;
 }
 
+.site-footer {
+    width: 100%;
+    background-color: #f8f9fa;
+    color: #777;
+    text-align: center;
+    font-size: 0.75rem;
+    padding: 1rem;
+    border-top: 1px solid #ddd;
+    margin-top: 2rem;
+}
+
+
 /* Адаптивные стили для мобильных устройств */
 @media (max-width: 768px) {
     .top-section {
