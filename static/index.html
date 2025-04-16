@@ -107,8 +107,13 @@
                 <header>
                     <h2>Добро пожаловать на ДоговорОК!</h2>
                     <p>
-                        Франчайзинговый контракт для студии фитнеса: Надежность. Выгода. Защита.
+                        Франчайзинговый контракт: Надежность. Выгода. Защита.
+                    </p>
+                    <p>
                         Мы помогаем потенциальным франчайзи избежать экономических рисков, невыгодных юридических условий и подводных камней в договорах.
+                    </p>
+                    <p>
+                        <a href="#" id="checkCounterparty" style="font-weight: bold; color: #d9534f;">Важно! Добросовестен ли Ваш контрагент? Проверьте это!</a>
                     </p>
                 </header>
             </div>
@@ -131,7 +136,7 @@
             <div class="upload-column full-width">
                 <h2>
                     Загрузка документов
-                    <span class="info-tooltip" data-tooltip="Загрузите файл договора формата PDF или DOCX для анализа.">?</span>
+                    <span class="info-tooltip" data-tooltip="Загрузите файл договора формата PDF или DOCX для анализа."></span>
                 </h2>
 
                 <div class="document-upload-carousel">
@@ -145,7 +150,7 @@
                     <div class="result-area" id="result"></div>
                 </div>
             </div>
-        </div>     
+        </div>
 
         <!-- Секция с калькуляторами (отдельный блок) -->
         <div class="calc-section">
@@ -164,7 +169,7 @@
                     <div class="calculator-block slide">
                         <h3>
                             Срок окупаемости
-                            <span class="info-tooltip" data-tooltip="Период времени, за который доходы от инвестиций сравняются с первоначальными вложениями.">?</span>
+                            <span class="info-tooltip" data-tooltip="Период времени, за который доходы от инвестиций сравняются с первоначальными вложениями."></span>
                         </h3>
                         <div class="calculator-form">
                             <div class="form-row">
@@ -193,7 +198,7 @@
                     <div class="calculator-block slide">
                         <h3>
                             Рентабельность инвестиций (ROI)
-                            <span class="info-tooltip" data-tooltip="Показатель эффективности инвестиций.">?</span>
+                            <span class="info-tooltip" data-tooltip="Показатель эффективности инвестиций."></span>
                         </h3>
                         <div class="calculator-form">
                             <div class="form-row checkbox-row">
@@ -224,7 +229,7 @@
                     <div class="calculator-block slide">
                         <h3>
                             Денежный поток (OCF)
-                            <span class="info-tooltip" data-tooltip="Реальное движение денежных средств от основной деятельности.">?</span>
+                            <span class="info-tooltip" data-tooltip="Реальное движение денежных средств от основной деятельности."></span>
                         </h3>
                         <div class="calculator-form">
                             <div class="form-row">
@@ -265,12 +270,11 @@
                 <div class="analysis-column">
                     <h3>Юридическая экспертиза</h3>
                     <div class="score-container">
-                        <div class="score score-info" id="legalScore" data-tooltip="Оценка рисков"></div>
+                        <div class="score score-info" id="legalScore" data-tooltip="Оценка юридической чистоты"></div>
                     </div>
                     <div class="factors-container">
                         <div class="factors-header">
                             <span>Фактор</span>
-                            <!-- <span>Результат</span> -->
                             <span>Подробнее</span>
                         </div>
                         <div class="factors-list" id="legalFactors">
@@ -283,7 +287,7 @@
                 <div class="analysis-column">
                     <h3>Экономическая экспертиза</h3>
                     <div class="score-container">
-                        <div class="score score-info" id="economicScore" data-tooltip="Оценка рисков"></div>
+                        <div class="score score-info" id="economicScore" data-tooltip="Оценка экономической выгоды"></div>
                     </div>
                     <div class="factors-container">
                         <div class="factors-header">
@@ -300,7 +304,7 @@
 
             <!-- Кнопки для скачивания -->
             <div class="download-buttons">
-                <button id="downloadReport" class="download-btn">Скачать отчет <span class="info-tooltip tooltip-top" data-tooltip="Скачать отчет с результатами экономической и юридической экспертизы документа.">?</span></button>
+                <button id="downloadReport" class="download-btn">Скачать отчет <span class="info-tooltip tooltip-top" data-tooltip="Скачать отчет с результатами экономической и юридической экспертизы документа."></span></button>
             </div>
         </div>
 
@@ -311,7 +315,7 @@
             <div class="accordion">
                 <div class="accordion-item">
                     <div class="accordion-header" onclick="toggleAccordion(this)">
-                        <h3>Что такое франчайзинг?</h3>
+                        <h3>Что такое франчайзинг (договор коммерческой концессии)?</h3>
                         <span class="accordion-icon">+</span>
                     </div>
                     <div class="accordion-content">
@@ -405,10 +409,77 @@
         </div>
     </div>
 
+    <div id="checkModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeCheckModal">&times;</span>
+            <h3 id="modalTitle">Проверка контрагента</h3>
+            <div id="modalContent">
+                <p>
+                    <strong>
+                        <a href="https://egrul.nalog.ru/index.html" target="_blank" rel="noopener noreferrer">
+                            Предоставление сведений из ЕГРЮЛ/ЕГРИП в электронном виде
+                        </a>
+                    </strong><br>
+                    Удостоверьтесь, что компания не находится в процессе ликвидации.
+                </p>
+
+                <p>
+                    <strong>
+                        <a href="https://rospatent.gov.ru/ru" target="_blank" rel="noopener noreferrer">
+                            Федеральная служба по интеллектуальной собственности (Роспатент) — Главная страница
+                        </a>
+                    </strong><br>
+                    Проверьте, есть ли у франчайзера зарегистрированный товарный знак.
+                </p>
+
+                <p>
+                    <strong>
+                        <a href="https://kad.arbitr.ru/?ysclid=m91rjiuywp404821019" target="_blank" rel="noopener noreferrer">
+                            Картотека арбитражных дел
+                        </a>
+                    </strong><br>
+                    Узнайте: <br>
+                    – о судебных спорах франчайзера и франчайзи <br>
+                    – о финансовых проблемах франчайзера <br>
+                    – о случаях нарушения прав потребителей франчайзером <br>
+                    – о спорах франчайзера с государственными органами
+                </p>
+
+                <p>
+                    <strong>
+                        <a href="https://old.rusfranch.ru/nfr/" target="_blank" rel="noopener noreferrer">
+                            Национальный реестр франшиз
+                        </a>
+                    </strong><br>
+                    Сделайте вывод о рейтинге и репутации франчайзера.
+                </p>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <script src="script.js"></script>
+
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function (m, e, t, r, i, k, a) {
+            m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments) };
+            m[i].l = 1 * new Date();
+            for (var j = 0; j < document.scripts.length; j++) { if (document.scripts[j].src === r) { return; } }
+            k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
+        })
+            (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+        ym(101044103, "init", {
+            clickmap: true,
+            trackLinks: true,
+            accurateTrackBounce: true,
+            webvisor: true
+        });
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/101044103" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
 </body>
 </html>
-```

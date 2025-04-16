@@ -92,20 +92,20 @@ function repositionCarouselButtons() {
         // Создаем новые кнопки с улучшенными стилями
         const newPrevBtn = document.createElement('button');
         newPrevBtn.className = 'carousel-btn prev-btn';
-        newPrevBtn.innerHTML = '&#10094;';
+        newPrevBtn.innerHTML = '<img src="./images/left_arrow.png" alt="Назад" style="width:300%; height:300%;">';
         newPrevBtn.onclick = function () { moveCarousel(-1); };
         newPrevBtn.style.position = 'absolute';
-        newPrevBtn.style.left = '0px';
+        newPrevBtn.style.left = '30px';
         newPrevBtn.style.width = '40px';
         newPrevBtn.style.height = '40px';
         newPrevBtn.style.fontSize = '1.2rem';
 
         const newNextBtn = document.createElement('button');
         newNextBtn.className = 'carousel-btn next-btn';
-        newNextBtn.innerHTML = '&#10095;';
+        newNextBtn.innerHTML = '<img src="./images/right_arrow.png" alt="Назад" style="width:300%; height:300%;">';
         newNextBtn.onclick = function () { moveCarousel(1); };
         newNextBtn.style.position = 'absolute';
-        newNextBtn.style.right = '0px';
+        newNextBtn.style.right = '30px';
         newNextBtn.style.width = '40px';
         newNextBtn.style.height = '40px';
         newNextBtn.style.fontSize = '1.2rem';
@@ -297,29 +297,35 @@ function createEconomicFactorElement(factor, value) {
     factorName.textContent = factor;
     factorElement.appendChild(factorName);
     
-    if ((factor === 'Роялти' && value >= 35) || (factor === 'Паушальный взнос' && value >= 5000000) || (factor === 'Максимальный штраф' && value >= 1000000)) {
+    if ((factor === 'Роялти' && value >= 35) || (factor === 'Паушальный взнос' && value >= 5000000) || (factor === 'Максимальный штраф' && value >= 500000)) {
         factorElement.classList.add('factor-negative');
-    } else if ((factor === 'Роялти' && value < 15) || (factor === 'Паушальный взнос' && value < 1000000) || (factor === 'Максимальный штраф' && value < 500000)) {
+    } else if ((factor === 'Роялти' && value < 15) || (factor === 'Паушальный взнос' && value < 1000000) || (factor === 'Максимальный штраф' && value < 300000)) {
         factorElement.classList.add('factor-positive');
     }
     // Добавляем результат с форматированием
     const factorResult = document.createElement('span');
     if (factor === 'Роялти') {
         factorResult.textContent = value + '%';
-    } else {
+        title = 'В качестве роялти признают плату за использование долгосрочных активов организации, в частности патентов, торговых марок, авторских прав и компьютерного программного обеспечения. Также роялти определяют как периодические выплаты за использование патента и иных объектов интеллектуальной собственности, выплачиваемые в виде процента от стоимости проданных товаров и услуг, при производстве которых использовались патенты, авторские права и др.';
+        href = 'https://www.consultant.ru/cons/cgi/online.cgi?req=doc&base=LAW&n=493202&dst=102452&cacheid=24EED9FF0BD3AC0ED6A9CC759FFD63CE&mode=splus&rnd=ptx86g#WbIqWiUXQAEV4gV5';
+    } else if (factor == 'Паушальный взнос') {
         factorResult.textContent = value.toLocaleString('ru-RU') + ' руб.';
+        title = 'Паушальный взнос в нормативных правовых актах РФ определяется как выплата по передаче прав на франшизу. Минэкономразвития России от 10.07.2017 N 338).';
+        href = 'https://www.consultant.ru/cons/cgi/online.cgi?req=doc&base=LAW&n=493202&dst=102452&cacheid=24EED9FF0BD3AC0ED6A9CC759FFD63CE&mode=splus&rnd=ptx86g#WbIqWiUXQAEV4gV5';
+    } else if (factor == 'Максимальный штраф') {
+        factorResult.textContent = value.toLocaleString('ru-RU') + ' руб.';
+        title = 'На случай неисполнения или ненадлежащего исполнения обязательства, в частности при просрочке исполнения, законом или договором может быть предусмотрена обязанность должника уплатить кредитору определенную денежную сумму (неустойку), размер которой может быть установлен в твердой сумме - штраф.';
+        href = 'https://www.consultant.ru/cons/cgi/online.cgi?req=doc&base=LAW&n=482692&dst=101618&cacheid=0BA096671BE25289ADD4E9786DFB53CA&mode=splus&rnd=loDpWiUuqpcpfiDV1#wcwpWiUzEkbieX87';
     }
     factorElement.appendChild(factorResult);
 
     // Добавляем ссылку с обработчиком для открытия модального окна
     const factorLink = document.createElement('a');
-    factorLink.href = "#";
+    factorLink.href = href;
+    factorLink.title = title;
     factorLink.textContent = 'Узнать';
-    factorLink.setAttribute('data-factor', factor);
-    factorLink.onclick = function (e) {
-        e.preventDefault();
-        openEconomicModal(factor);
-    };
+    // factorLink.setAttribute('data-factor', factor);
+    factorLink.target = '_blank';
     factorElement.appendChild(factorLink);
 
     return factorElement;
@@ -340,74 +346,81 @@ function createLegalFactorElement(question, value) {
     // Формируем утверждение и ссылки на основе вопроса и значения
     let statement = '';
     let href = '';
-    let multipleLinks = null;
 
     if (question === 'Не является ли документ лицензионным соглашением?') {
         statement = value === true
             ? 'Документ не является лицензионным соглашением'
             : 'Документ является лицензионным соглашением';
-        href = '';
+        href = 'https://www.consultant.ru/cons/cgi/online.cgi?req=doc&base=LAW&n=166145&dst=15&field=134&rnd=lb7JfQ';
+        title = `Договор франшизы в отличие от лицензионного договора дает возможность использовать не один определенный объект интеллектуальной собственности, а комплекс объектов исключительных прав`;
     } else if (question === 'Отсутствует ли одностороннее расторжение без объяснения причин?') {
         statement = value === true
             ? 'Правообладатель не вправе расторгнуть договор без объяснения причин'
             : 'Правообладатель вправе расторгнуть договор без объяснения причин';
-
-        // Для этого фактора создаем мультиссылку
-        multipleLinks = [
-            { text: 'Ст. 10 ГК', url: 'https://www.consultant.ru/document/cons_doc_LAW_5142/62129e15ab0e6008725f43d63284aef0bb12c2cf/' },
-            { text: 'Ст. 432 ГК', url: 'https://www.consultant.ru/document/cons_doc_LAW_5142/adbefccc8d538d42038164bb81d886c76e719d63/' },
-            { text: 'Ст. 1033 ГК', url: 'https://www.consultant.ru/document/cons_doc_LAW_9027/fee922b3cd2e5c6f09bdc7372d2f857da2a2f64d/' }
-        ];
+        title = `Если в договоре предусмотрено право на отказ, то оно может быть реализовано по-разному, если это не запрещено законом (п. 4 ст. 421 ГК РФ): отказ может быть мотивированным - связанным с нарушением договора контрагента или немотивированным - при котором отказаться от исполнения договора можно в любое время без объяснения причин`
+        href = 'https://login.consultant.ru/link/?req=doc&base=LAW&n=482692&dst=101994&date=09.04.2025&demo=2';
     } else if (question === 'Даются ли Пользователю права на товарный знак?') {
         statement = value === true
             ? 'Пользователю даются права на товарный знак'
             : 'Пользователю не даются права на товарный знак';
-        href = 'https://www.consultant.ru/document/cons_doc_LAW_9027/49c2afdf04c1ba13e815aa8b44287cd4b6cac9f5/';
+        title = `По договору коммерческой концессии правообладатель обязуется предоставить пользователю за вознаграждение на срок или без указания срока право использовать в предпринимательской деятельности пользователя комплекс принадлежащих правообладателю исключительных прав, включающий право на товарный знак, знак обслуживания, а также права на другие предусмотренные договором объекты исключительных прав, в частности на коммерческое обозначение, секрет производства (ноу-хау) (п.1 ст.1027 ГК РФ)`
+        href = 'https://login.consultant.ru/link/?req=doc&base=LAW&n=493202&dst=15&date=09.04.2025&demo=2';
     } else if (question === 'Отсутствует ли автоматическое расторжение?') {
         statement = value === true
             ? 'Отсутствует автоматическое расторжение договора'
             : 'Присутствует автоматическое расторжение договора';
-        href = '';
+        title = 'Автоматическое прекращение договора коммерческой концессии возможно в двух случаях, прямо предусмотренных законом.  Во-первых, когда  одну из сторон суд признал банкротом. Во-вторых, истек срок действия исключительного права на товарный знак.';
+        href = 'https://www.consultant.ru/cons/cgi/online.cgi?req=doc&base=LAW&n=481313&dst=101559';
     } else if (question === 'Отсутствует ли запрет конкуренции?') {
         statement = value === true
             ? 'Отсутствует запрет конкуренции'
             : 'Присутствует запрет конкуренции';
-        href = '';
+        title = 'Вы можете включить в договор условия, которые ограничивают действия сторон договора. Примерный перечень ограничений есть в п. 1 ст. 1033 ГК РФ.'
+        href = 'https://login.consultant.ru/link/?req=doc&base=LAW&n=493202&dst=77&date=09.04.2025&demo=2';    
     } else if (question === 'Имееется ли государственная регистрация?') {
         statement = value === true
-            ? 'Государственная регистрация имеется'
-            : 'Государственная регистрация не имеется';
-        href = '';
+            ? 'Присутствует государственная регистрация'
+            : 'Государственная регистрация отсутствует';
+        title = 'Обратите внимание, что регистрации подлежит не сам договор коммерческой концессии, а предоставление по нему права использовать комплекс исключительных прав правообладателя в предпринимательской деятельности пользователя. Без регистрации предоставление права использования считается несостоявшимся (п. 2 ст. 1028 ГК РФ).'
+        href = 'https://login.consultant.ru/link/?req=doc&base=LAW&n=493202&dst=171&date=09.04.2025&demo=2';
     } else if (question === 'Указан ли размер вознаграждения?') {
         statement = value === true
             ? 'Указан размер вознаграждения'
             : 'Не указан размер вознаграждения';
-        href = '';
-    } else if (question === 'Указаны ли рабочие дни?') {
+        title = 'Обязательно укажите размер вознаграждения Правообладателя или установите, как его определить. Без этого условия договор по общему правилу считается незаключенным (п. п. 1, 4 ст. 1027, п. 5 ст. 1235 ГК РФ).'
+        href = 'https://cloud.consultant.ru/cloud/cgi/online.cgi?req=doc&base=LAW&n=493202&dst=16&field=134&rnd=Zu6paA';
+    } else if (question === 'Указан порядок подачи документов?') {
         statement = value === true
-            ? 'Указаны рабочие дни'
-            : 'Не указаны рабочие дни';
-        href = '';
+            ? 'Указан порядок подачи документов'
+            : 'Не указан порядок подачи документов?';
+        title = 'Регистрацию обеспечивает правообладатель, если договором не предусмотрено иное (п. 2 ст. 1031 ГК РФ). Вместе с тем в регистрации не обязательно откажут, если документы подаст пользователь или, напротив, правообладатель, когда договором такая обязанность возложена на пользователя (п. 3.4.10 Рекомендаций по вопросам проверки договоров о распоряжении исключительным правом). Предоставление права зарегистрируют (или откажут в регистрации, если для этого будут основания) в срок не более 45 рабочих дней со дня, когда необходимые документы поступят в Роспатент. Этот срок в ряде случаев может быть увеличен (п. п. 14, 15 Административного регламента по регистрации распоряжения по договору исключительным правом, п. 17 Правил регистрации распоряжения исключительным правом).';
+        href = 'https://login.consultant.ru/link/?req=doc&base=LAW&n=493202&dst=172&field=134&date=15.04.2025';
     } else if (question === 'Является ли Правообладатель юридическим лицом?') {
         statement = value === true
             ? 'Правообладатель является юридическим лицом'
             : 'Правообладатель не является юридическим лицом';
-        href = 'https://www.consultant.ru/document/cons_doc_LAW_9027/49c2afdf04c1ba13e815aa8b44287cd4b6cac9f5/';
+        title = 'Сторонами по договору коммерческой концессии могут быть коммерческие организации и граждане, зарегистрированные в качестве индивидуальных предпринимателей (п.3 ст. 1027 ГК РФ)'
+        href = 'https://login.consultant.ru/link/?req=doc&base=LAW&n=493202&dst=102437&date=09.04.2025&demo=2';
     } else if (question === 'Указаны ли положения о претензионном порядке?') {
         statement = value === true
             ? 'Указаны положения о претензионном порядке'
             : 'Не указаны положения о претензионном порядке';
-        href = '';
+        title = `Если вы не включите условие о претензионном порядке, то на разрешение арбитражного суда можно передать (ч. 5 ст. 4 АПК РФ): 
+                1)спор о взыскании денежных средств - только по истечении 30 календарных дней со дня направления претензии, если иные срок и (или) порядок не установлены законом; 
+                2)иные возникшие из договора споры - без соблюдения досудебного порядка, только если такой порядок не установлен федеральным законом.`;
+        href = 'https://cloud.consultant.ru/cloud/cgi/online.cgi?req=doc&base=CJI&n=118813&dst=100016&field=134&rnd';
     } else if (question === 'Указан ли срок действия договора?') {
         statement = value === true
             ? 'Указан срок действия договора'
             : 'Не указан срок действия договора';
-        href = '';
+        title = 'Если вы не укажете срок действия договора, он будет действовать 5 лет (п. 4 ст. 1027, п. 4 ст. 1235 ГК РФ).'
+        href = 'https://login.consultant.ru/link/?req=doc&base=LAW&n=493202&dst=16&date=09.04.2025&demo=2';
     } else if (question === 'Указан ли номер свидетельства правообладателя?') {
         statement = value === true
             ? 'Указан номер свидетельства правообладателя'
             : 'Не указан номер свидетельства правообладателя';
-        href = '';
+        title = "Без указания номера свидетельства правообладателя и перечня товаров, в отношении которых пользователь вправе использовать товарный знак, договор по общему правилу может быть признан незаключенным (п. п. 1, 3 ст. 432, п. 4 ст. 1027, пп. 1 п. 6 ст. 1235, п. 1.1 ст. 1489 ГК РФ). Если какой-то из способов не будет указан в договоре, пользователь не сможет его применять (п. 4 ст. 1027, п. 1 ст. 1235 ГК РФ).";
+        href = 'https://login.consultant.ru/link/?req=doc&base=LAW&n=482692&dst=102049&date=09.04.2025&demo=2';
     }
     // Добавляем утверждение в колонку "Фактор"
     const factorStatement = document.createElement('span');
@@ -415,36 +428,12 @@ function createLegalFactorElement(question, value) {
     factorElement.appendChild(factorStatement);
 
     // Добавляем ссылку или дропдаун с множественными ссылками в колонку "Ссылка"
-    if (multipleLinks) {
-        const linkContainer = document.createElement('div');
-        linkContainer.className = 'link-dropdown';
-
-        const mainLink = document.createElement('a');
-        mainLink.href = "#";
-        mainLink.textContent = 'Узнать';
-        mainLink.className = 'main-link';
-        linkContainer.appendChild(mainLink);
-
-        const dropdownContent = document.createElement('div');
-        dropdownContent.className = 'dropdown-content';
-
-        multipleLinks.forEach(link => {
-            const linkElement = document.createElement('a');
-            linkElement.href = link.url;
-            linkElement.textContent = link.text;
-            linkElement.target = '_blank';
-            dropdownContent.appendChild(linkElement);
-        });
-
-        linkContainer.appendChild(dropdownContent);
-        factorElement.appendChild(linkContainer);
-    } else {
-        const factorLink = document.createElement('a');
-        factorLink.href = href;
-        factorLink.textContent = 'Узнать';
-        factorLink.target = '_blank';
-        factorElement.appendChild(factorLink);
-    }
+    const factorLink = document.createElement('a');
+    factorLink.href = href;
+    factorLink.title = title;
+    factorLink.textContent = 'Узнать';
+    factorLink.target = '_blank';
+    factorElement.appendChild(factorLink);
 
     return factorElement;
 }
@@ -500,150 +489,124 @@ function showLoadingIndicator() {
     return true;
 }
 
-// Функция-заглушка для анализа файла - с улучшенной обработкой длительных операций
+// Выносим обработчик в глобальную область
+let currentReportData = null;
+
+// Добавляем обработчик один раз при загрузке страницы
+document.addEventListener('DOMContentLoaded', () => {
+    downloadReportBtn.addEventListener('click', async () => {
+        if (!currentReportData) return;
+        
+        const { jsPDF } = window.jspdf;
+        const content = document.createElement('div');
+        content.style.fontFamily = 'Roboto, sans-serif';
+        content.style.padding = '20px';
+        content.innerHTML = `
+            <h1 style="text-align: center;">Отчет по анализу файла</h1>
+            <hr>
+            <p><strong>Имя файла:</strong> ${currentReportData.fileName}</p>
+            <br>
+            <h2>${currentReportData.title}</h2>
+            <br>
+            <h3>Оценка юридической чистоты: ${currentReportData.legalScore}/3</h3>
+            <h3>Оценка экономической выгоды: ${currentReportData.economicScore}/3</h3>
+            <br>
+            ${currentReportData.finalContent}
+        `;
+
+        document.body.appendChild(content);
+        const canvas = await html2canvas(content);
+        document.body.removeChild(content);
+
+        const pdf = new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            format: 'a4'
+        });
+        
+        const imgData = canvas.toDataURL('image/png');
+        const imgWidth = 210;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        
+        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+        pdf.save(`Отчет_${currentReportData.fileName.replace(/\.[^/.]+$/, "")}.pdf`);
+    });
+});
+
 function analyzeFile(file) {
     return new Promise((resolve, reject) => {
-        // Показываем индикатор загрузки
         showLoadingIndicator();
-
         const formData = new FormData();
-        formData.append('file', file); // Добавляем файл в FormData
+        formData.append('file', file);
 
-        fetch('http://127.0.0.1:5000/analyze', { // Убедитесь, что этот URL соответствует вашему серверу
+        fetch('http://127.0.0.1:5000/analyze', {
             method: 'POST',
-            body: formData, // Отправляем FormData с файлом
+            body: formData,
             signal: AbortSignal.timeout(30000)
         })
         .then(response => {
-            if (!response.ok) {
-                throw new Error('Ошибка сети: ' + response.statusText);
-            }
+            if (!response.ok) throw new Error('Ошибка сети: ' + response.statusText);
             return response.json();
         })
         .then(data => {
             resultDiv.innerHTML = 'Анализ файла...';
 
-            const economicScore = data.economicScore;
-            const legalScore = data.legalScore;
-            
-            const economicFactors = data.economicFactors;
-            const legalFactors = data.legalFactors;
+            // Обновляем текущие данные отчета
+            currentReportData = {
+                fileName: currentFileName,
+                title: analysisTitleDiv.textContent,
+                legalScore: data.legalScore,
+                economicScore: data.economicScore,
+                finalContent: data.final,
+                economicFactors: data.economicFactors
+            };
 
-            displayScore(economicScoreDiv, economicScore);
-            displayScore(legalScoreDiv, legalScore);
-
-            populateEconomicFactors(economicFactorsDiv, economicFactors);
-            populateLegalFactors(legalFactorsDiv, legalFactors);
+            displayScore(economicScoreDiv, data.economicScore);
+            displayScore(legalScoreDiv, data.legalScore);
+            populateEconomicFactors(economicFactorsDiv, data.economicFactors);
+            populateLegalFactors(legalFactorsDiv, data.legalFactors);
 
             analysisResultsDiv.style.display = 'block';
 
-            if (economicScore === 1 || legalScore === 1) {
+            if (data.economicScore === 1 || data.legalScore === 1) {
                 analysisTitleDiv.textContent = 'Результат: Крайне не рекомендуется использовать этот договор';
-            } else if (economicScore === 2 || legalScore === 2) {
+            } else if (data.economicScore === 2 || data.legalScore === 2) {
                 analysisTitleDiv.textContent = 'Результат: Договор рекомендуется немного изменить';
             } else {
                 analysisTitleDiv.textContent = 'Результат: С юридической стороны договор корректен, а с экономической — рентабелен';
             }
 
-            
-            downloadReportBtn.addEventListener('click', async () => {
-                const { jsPDF } = window.jspdf;
-                
-                // Создаем HTML-контент
-                const content = document.createElement('div');
-                content.style.fontFamily = 'Roboto, sans-serif';
-                content.style.padding = '20px';
-                content.innerHTML = `
-                    <h1 style="text-align: center;">Отчет по анализу файла</h1>
-                    <hr>
-                    <p><strong>Имя файла:</strong> ${currentFileName}</p>
-                    <br>
-                    <h2>${analysisTitleDiv.textContent}</h2>
-                    <br>
-                    <h3>Оценка юридической чистоты: ${legalScore}/3</h3>
-                    <h3>Оценка Экономической выгоды: ${economicScore}/3</h3>
-
-                    <br>
-                    
-                    <h2>Юридические факторы:</h2>
-                    <ul>
-                        <li>Не является ли документ лицензионным соглашением?: ${legalFactors["Не является ли документ лицензионным соглашением?"] ? "Да" : "Нет"}</li>
-                        <li>Отсутствует ли одностороннее расторжение без объяснения причин?: ${legalFactors["Отсутствует ли одностороннее расторжение без объяснения причин?"] ? "Да" : "Нет"}</li>
-                        <li>Даются ли Пользователю права на товарный знак?: ${legalFactors["Даются ли Пользователю права на товарный знак?"] ? "Да" : "Нет"}</li>
-                        <li>Отсутствует ли автоматическое расторжение?: ${legalFactors["Отсутствует ли автоматическое расторжение?"] ? "Да" : "Нет"}</li>
-                        <li>Отсутствует ли запрет конкуренции?: ${legalFactors["Отсутствует ли запрет конкуренции?"] ? "Да" : "Нет"}</li>
-                        <li>Имееется ли государственная регистрация?: ${legalFactors["Имееется ли государственная регистрация?"] ? "Да" : "Нет"}</li>
-                        <li>Указан ли размер вознаграждения?: ${legalFactors["Указан ли размер вознаграждения?"] ? "Да" : "Нет"}</li>
-                        <li>Указаны ли рабочие дни?": ${legalFactors["Указаны ли рабочие дни?"] ? "Да" : "Нет"}</li>
-                        <li>Является ли Правообладатель юридическим лицом?: ${legalFactors["Является ли Правообладатель юридическим лицом?"] ? "Да" : "Нет"}</li>
-                        <li>Указаны ли положения о претензионном порядке?: ${legalFactors["Указаны ли положения о претензионном порядке?"] ? "Да" : "Нет"}</li>
-                        <li>Указан ли срок действия договора?: ${legalFactors["Указан ли срок действия договора?"] ? "Да" : "Нет"}</li>
-                        <li>Указан ли номер свидетельства правообладателя?: ${legalFactors["Указан ли номер свидетельства правообладателя?"] ? "Да" : "Нет"}</li>
-                    </ul>
-                    
-                    <br>
-
-                    <h2>Экономические факторы:</h2>
-                    <ul>
-                        <li>Роялти: ${economicFactors["Роялти"]}%</li>
-                        <li>Паушальный взнос: ${economicFactors["Паушальный взнос"]} руб.</li>
-                        <li>Максимальный штраф: ${economicFactors["Максимальный штраф"]} руб.</li>
-                    </ul>
-                `;
-
-                // Временно добавляем в DOM (для html2canvas)
-                document.body.appendChild(content);
-                
-                // Конвертируем HTML в изображение
-                const canvas = await html2canvas(content);
-                document.body.removeChild(content); // Удаляем временный элемент
-                
-                // Создаем PDF
-                const pdf = new jsPDF({
-                    orientation: 'portrait',
-                    unit: 'mm',
-                    format: 'a4'
-                });
-                
-                // Добавляем изображение в PDF
-                const imgData = canvas.toDataURL('image/png');
-                const imgWidth = 210; // A4 width in mm
-                const imgHeight = (canvas.height * imgWidth) / canvas.width;
-                
-                pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-                
-                // Скачиваем PDF
-                pdf.save(`Отчет_${currentFileName.replace(/\.[^/.]+$/, "")}.pdf`);
+            resolve({ 
+                success: true, 
+                message: 'Файл успешно проанализирован', 
+                economicScore: data.economicScore, 
+                legalScore: data.legalScore 
             });
-            
-            resolve({
-                success: true,
-                message: 'Файл успешно проанализирован',
-                economicScore: economicScore,
-                legalScore: legalScore
-            });
-            
         })
-        .catch(error => {
-            // Отклоняем промис в случае ошибки
-            reject('Ошибка при обработке файла: ' + error);
-        });
+        .catch(error => reject('Ошибка при обработке файла: ' + error));
 
         isAnalysisVisible = true;
         analysisTitleDiv.classList.remove('collapsed');
-
-        // Устанавливаем таймаут для имитации длительного анализа
-        
-        // Добавляем обработку ошибок
-        try {
-            // Здесь может быть обработка файла
-            console.log("Анализ файла:", file.name);
-        } catch (error) {
-            clearTimeout(analysisTimeout);
-            reject(error);
-        }
     });
 }
+
+
+document.getElementById('checkCounterparty').addEventListener('click', function (e) {
+    e.preventDefault();
+    const modal = document.getElementById('checkModal');
+    modal.style.display = 'block';
+});
+
+document.getElementById('closeCheckModal').addEventListener('click', function () {
+    document.getElementById('checkModal').style.display = 'none';
+});
+
+window.addEventListener('click', function (e) {
+    const modal = document.getElementById('checkModal');
+    if (e.target === modal) {
+        modal.style.display = 'none';
+    }
+});
 
 // Обновленная функция для обработки файла
 function handleFile(file) {
@@ -696,7 +659,7 @@ function handleFile(file) {
             analysisResultsDiv.style.display = 'block';
 
             // Добавляем обработчики для кнопок "Узнать" в экономической экспертизе
-            attachEconomicFactorListeners();
+            // attachEconomicFactorListeners();
 
             // Прокручиваем страницу к результатам
             analysisResultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -779,61 +742,67 @@ function addModalToDOM() {
 }
 
 // Функция для открытия модального окна
-function openEconomicModal(factor) {
-    const modal = document.getElementById('economicModal') || addModalToDOM();
-    const modalTitle = document.getElementById('modalTitle');
-    const modalContent = document.getElementById('modalContent');
+// function openEconomicModal(factor) {
+//     const modal = document.getElementById('economicModal') || addModalToDOM();
+//     const modalTitle = modal.querySelector('#modalTitle');
+//      const modalContent = modal.querySelector('#modalContent');
 
-    // Устанавливаем заголовок и содержимое
-    modalTitle.textContent = factor;
-    if (factor === 'Роялти') {
-        modalContent.textContent = `Это регулярный (обычно ежемесячный) платёж, который вы платите владельцу франшизы за право пользоваться его брендом и получать поддержку. Обычно рассчитывается как процент от вашей выручки.`;
-    } else if (factor === 'Паушальный взнос') {
-        modalContent.textContent = `Это разовый платёж, который вы платите в начале, чтобы купить право открыть франшизу и использовать бренд, бизнес-модель и поддержку франчайзера.`;
-    } else if (factor === 'Максимальный штраф') {
-        modalContent.textContent = `Предусмотрены за нарушение условий договора франчайзинга, например, несоблюдение стандартов бренда, просрочку платежей или несанкционированное раскрытие коммерческой тайны.`;
-    }
+//     // Устанавливаем заголовок и содержимое
+//     modalTitle.textContent = factor;
+//     if (factor === 'Роялти') {
+//         modalContent.textContent = `Это регулярный (обычно ежемесячный) платёж, который вы платите владельцу франшизы за право пользоваться его брендом и получать поддержку. Обычно рассчитывается как процент от вашей выручки.`;
+//     } else if (factor === 'Паушальный взнос') {
+//         modalContent.textContent = `Это разовый платёж, который вы платите в начале, чтобы купить право открыть франшизу и использовать бренд, бизнес-модель и поддержку франчайзера.`;
+//     } else if (factor === 'Максимальный штраф') {
+//         modalContent.textContent = `Предусмотрены за нарушение условий договора франчайзинга, например, несоблюдение стандартов бренда, просрочку платежей или несанкционированное раскрытие коммерческой тайны.`;
+//     } else {
+//         modalContent.textContent = '';
+//     }
 
-    // Отображаем модальное окно
-    modal.style.display = "block";
-}
+//     // Отображаем модальное окно
+//     modal.style.display = "block";
+// }
 
 // Функция для добавления обработчиков к существующим кнопкам
-function attachEconomicFactorListeners() {
-    document.querySelectorAll('.analysis-column:last-child .factor-item a').forEach(link => {
-        link.onclick = function (e) {
-            e.preventDefault();
-            const factor = this.closest('.factor-item').querySelector('span:first-child').textContent;
-            openEconomicModal(factor);
-        };
-    });
-}
+// function attachEconomicFactorListeners() {
+//     document.querySelectorAll('.analysis-column:last-child .factor-item a').forEach(link => {
+//         link.onclick = function (e) {
+//             e.preventDefault();
+//             const factor = this.closest('.factor-item').querySelector('span:first-child').textContent;
+//             openEconomicModal(factor);
+//         };
+//     });
+// }
 
 // Функция для открытия модального окна с информацией о калькуляторе
 function openCalculatorModal(calculator) {
     const modal = document.getElementById('economicModal') || addModalToDOM();
-    const modalTitle = document.getElementById('modalTitle');
-    const modalContent = document.getElementById('modalContent');
+    const modalTitle = modal.querySelector('#modalTitle');
+    const modalContent = modal.querySelector('#modalContent');
 
-    // Устанавливаем заголовок и содержимое в зависимости от типа калькулятора
-    if (calculator === 'payback') {
-        modalTitle.textContent = 'Срок окупаемости';
-        modalContent.innerHTML = `
-            <p>Это время, за которое вы вернёте вложенные деньги.</p>
-            <p> Например, если вы вложили 1 млн и вернули их за 2 года — срок окупаемости 2 года.</p>
-        `;
-    } else if (calculator === 'roi') {
-        modalTitle.textContent = 'Рентабельность инвестиций (ROI)';
-        modalContent.innerHTML = `
-            <p>Это общий показатель, насколько прибыльным был ваш бизнес по сравнению с вложениями.</p>
-            <p>Это общий показатель, насколько прибыльным был ваш бизнес по сравнению с вложениями.</p>
-            <p>Показывает, насколько эффективно вы используете деньги, чтобы зарабатывать.</p>
-        `;
-    } else if (calculator === 'ocf') {
-        modalTitle.textContent = 'Денежный поток (OCF)';
-        modalContent.innerHTML = `
-            <p>Это реальные деньги, которые остались у вас после всех операционных расходов (например, после оплаты аренды, зарплат, товаров и т.п.). Он показывает, сколько вы действительно зарабатываете на бизнесе.</p>
-        `;
+    switch (calculator) {
+        case 'payback':
+            modalTitle.textContent = 'Срок окупаемости';
+            modalContent.innerHTML = `
+                <p>Это время, за которое вы вернёте свои инвестиции. Рассчитывается как сумма вложений, делённая на ежемесячную прибыль. Чем короче срок окупаемости — тем быстрее бизнес начнёт приносить прибыль.</p>
+            `;
+            break;
+        case 'roi':
+            modalTitle.textContent = 'Рентабельность инвестиций (ROI)';
+            modalContent.innerHTML = `
+                <p>Показатель, отражающий, насколько прибыльна инвестиция. Рассчитывается как соотношение дохода к вложениям и выражается в процентах. Высокий ROI говорит о хорошей доходности проекта.</p>
+            `;
+            break;
+        case 'ocf':
+            modalTitle.textContent = 'Операционный денежный поток (OCF)';
+            modalContent.innerHTML = `
+                <p>OCF — это деньги, которые остаются у бизнеса после оплаты всех операционных расходов. Помогает оценить реальную платежеспособность компании, независимо от инвестиций и кредитов.</p>
+            `;
+            break;
+        default:
+            modalTitle.textContent = 'Информация';
+            modalContent.innerHTML = '<p>Описание калькулятора недоступно.</p>';
+            break;
     }
 
     // Отображаем модальное окно

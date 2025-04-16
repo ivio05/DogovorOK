@@ -683,17 +683,7 @@ header {
         .factor-item a:hover {
             transform: scale(1.1);
         }
-        
-        .factor-positive {
-            background-color: rgba(40, 167, 69, 0.1);
-            box-shadow: inset 4px 0 0 rgba(37, 180, 64, 0.5);
-        }
-        
-        /* Стиль для отрицательного значения (value = 0) */
-        .factor-negative {
-            background-color: rgba(220, 53, 69, 0.1);
-            box-shadow: inset 4px 0 0 rgba(230, 53, 69, 0.5);
-        }
+
 /* Специальные стили для юридической экспертизы */
 .analysis-column:nth-child(2) .factors-header {
     display: grid;
@@ -803,7 +793,7 @@ header {
     /* Стили для кликабельного заголовка анализа */
     .analysis-title.toggleable {
         cursor: pointer;
-        position: relative; 
+        position: relative;
         padding-left: 25px;
         transition: color 0.3s ease;
     }

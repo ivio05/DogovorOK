@@ -31,6 +31,7 @@ def law_factors(text):
     morph = pymorphy3.MorphAnalyzer()
     words = text.split()
 
+    
     state_registration_base = [morph.parse('государственная')[0].normal_form,
                                morph.parse('регистрация')[0].normal_form]
     license_base = [morph.parse('лицензионное')[0].normal_form,
@@ -132,8 +133,8 @@ def law_factors(text):
         "Отсутствует ли запрет конкуренции?": not competition_found,
         "Имееется ли государственная регистрация?": state_registration_found or rospatent_found,
         "Указан ли размер вознаграждения?": reward_found,
-        "Указаны ли рабочие дни?": registration_term_found,
-        "Является ли Правообладатель юридическим лицом?" : True,
+        "Указан порядок подачи документов?": registration_term_found,
+        "Является ли Правообладатель юридическим лицом?" : "ООО" in text,
         "Указаны ли положения о претензионном порядке?": objection_found,
         "Указан ли срок действия договора?": duration_found,
         "Указан ли номер свидетельства правообладателя?": certificate_found
@@ -266,16 +267,16 @@ def check_contract(name):
         law_mark = 1
     elif not law['Указан ли размер вознаграждения?']:
         law_mark = 1
-    elif not law['Указаны ли рабочие дни?']:
+    elif not law['Указан порядок подачи документов?']:
         law_mark = 2
     elif not law['Является ли Правообладатель юридическим лицом?']:
         law_mark = 2
     
     fin_mark = 3
 
-    if fin["Роялти"] >= 35 or fin["Паушальный взнос"] >= 5000000 or fin["Максимальный штраф"] >= 1000000:
+    if fin["Роялти"] >= 35 or fin["Паушальный взнос"] >= 5000000 or fin["Максимальный штраф"] >= 500000:
         fin_mark = 1
-    elif fin["Роялти"] >= 15 or fin["Паушальный взнос"] >= 1000000 or fin["Максимальный штраф"] >= 500000:
+    elif fin["Роялти"] >= 15 or fin["Паушальный взнос"] >= 1000000 or fin["Максимальный штраф"] >= 300000:
         fin_mark = 2
 
     return law_mark, fin_mark, law, fin
